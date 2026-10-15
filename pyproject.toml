@@ -1,0 +1,24 @@
+[project]
+name = "spendsense"
+version = "2.0.0"
+description = "SpendSense - Personal Spending Behavior Analyzer"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "pydantic>=2.6.0",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "openpyxl>=3.1.2",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27.0",
+    "phonenumbers>=9.0.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.vercel]
+entrypoint = "backend.main:app"
