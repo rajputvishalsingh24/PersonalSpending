@@ -278,16 +278,19 @@ class RegisterEmailRequest(BaseModel):
     password: str
     confirm_password: str
     terms_accepted: bool = True
+    role: Optional[str] = "customer"  # 'customer' or 'owner'
 
 class LoginEmailRequest(BaseModel):
     email: str
     password: str
     remember_me: Optional[bool] = False
+    role: Optional[str] = None  # optional role hint
 
 class SendOtpRequest(BaseModel):
     country_code: str = "+91"
     phone: str
     purpose: Optional[str] = None  # 'register' or 'login'
+    role: Optional[str] = "customer"
 
 class VerifyOtpRequest(BaseModel):
     country_code: str = "+91"
@@ -295,6 +298,7 @@ class VerifyOtpRequest(BaseModel):
     otp_code: str
     full_name: Optional[str] = None
     purpose: Optional[str] = None  # 'register' or 'login'
+    role: Optional[str] = "customer"
 
 class ResendVerificationRequest(BaseModel):
     email: str
@@ -318,6 +322,7 @@ class UpdateProfileRequest(BaseModel):
     email: Optional[str] = None
     phone: Optional[str] = None
     default_currency: Optional[str] = None
+    role: Optional[str] = None
 
 class UserResponse(BaseModel):
     id: int
@@ -329,9 +334,28 @@ class UserResponse(BaseModel):
     phone_verified: int
     account_status: str
     default_currency: str
+    role: str = "customer"
     created_at: str
 
 class AuthResponse(BaseModel):
     user: UserResponse
     message: str
     session_token: str
+
+# Database Management Models
+class SqlQueryRequest(BaseModel):
+    query: str
+
+class SqlQueryResponse(BaseModel):
+    columns: List[str]
+    rows: List[List[Any]]
+    row_count: int
+    execution_time_ms: float
+    error: Optional[str] = None
+
+class TableRowInsertRequest(BaseModel):
+    data: Dict[str, Any]
+
+class TableRowUpdateRequest(BaseModel):
+    data: Dict[str, Any]
+

@@ -42,7 +42,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCompletePhoneReg = document.getElementById("btn-complete-phone-reg");
   const btnRegAutoFillOtp = document.getElementById("btn-reg-auto-fill-otp");
 
-  let countdownInterval = null;
+  const roleBtnCustomer = document.getElementById("role-btn-customer");
+  const roleBtnOwner = document.getElementById("role-btn-owner");
+
+  let selectedRole = "customer"; // 'customer' or 'owner'
+
+  function updateRoleUI() {
+    if (selectedRole === "customer") {
+      roleBtnCustomer.className = "flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm bg-white text-slate-900 flex items-center justify-center space-x-1.5";
+      roleBtnOwner.className = "flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center space-x-1.5";
+    } else {
+      roleBtnOwner.className = "flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm bg-slate-900 text-white flex items-center justify-center space-x-1.5";
+      roleBtnCustomer.className = "flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center space-x-1.5";
+    }
+  }
+
+  if (roleBtnCustomer) {
+    roleBtnCustomer.addEventListener("click", () => {
+      selectedRole = "customer";
+      updateRoleUI();
+      hideAlert();
+    });
+  }
+
+  if (roleBtnOwner) {
+    roleBtnOwner.addEventListener("click", () => {
+      selectedRole = "owner";
+      updateRoleUI();
+      hideAlert();
+      showAlert("👑 Registering as Platform Owner / Administrator account.", "info");
+    });
+  }
 
   function showAlert(message, type = "error") {
     alertBox.className = type === "error"
@@ -164,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
         email,
         password,
         confirm_password: confirmPassword,
+        role: selectedRole,
         terms_accepted: true
       });
 
@@ -172,7 +203,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       showToast("Account created successfully! Welcome to SpendSense.", "success");
-      setTimeout(() => window.location.href = "dashboard.html", 600);
+      const targetPage = selectedRole === "owner" ? "admin.html" : "dashboard.html";
+      setTimeout(() => window.location.href = targetPage, 600);
 
     } catch (err) {
       showAlert(err.message || "Failed to create account.");
@@ -328,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
         phone: regPhoneNumber.value.trim().replace(/[\s\-\(\)]/g, ""),
         otp_code: otpCode,
         full_name: regPhoneName.value.trim(),
+        role: selectedRole,
         purpose: "register"
       });
 
@@ -337,7 +370,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       triggerConfetti();
       showToast("Registration successful! Welcome to SpendSense.", "success");
-      setTimeout(() => window.location.href = "dashboard.html", 650);
+      const targetPage = selectedRole === "owner" ? "admin.html" : "dashboard.html";
+      setTimeout(() => window.location.href = targetPage, 650);
 
     } catch (err) {
       showAlert(err.message || "Verification failed. Check the code.");

@@ -63,6 +63,16 @@
           <span id="auth-alert-message" class="flex-grow font-medium"></span>
         </div>
 
+        <!-- Role Selector Toggle (Customer vs Owner/Admin) -->
+        <div class="mb-5 p-1 bg-slate-100/90 rounded-2xl flex border border-slate-200/80 shadow-inner" id="role-selector-container">
+          <button id="role-btn-customer" type="button" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm bg-white text-slate-900 flex items-center justify-center space-x-1.5">
+            <span>👤 Customer</span>
+          </button>
+          <button id="role-btn-owner" type="button" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center space-x-1.5">
+            <span>👑 Owner / Admin</span>
+          </button>
+        </div>
+
         <!-- Auth Method Tabs -->
         <div class="flex p-1 bg-slate-100 rounded-2xl mb-6 border border-slate-200/60">
           <button id="tab-btn-phone" type="button" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm bg-white text-slate-900">

@@ -63,6 +63,16 @@
           <span id="auth-alert-message" class="flex-grow font-medium"></span>
         </div>
 
+        <!-- Role Selector Toggle (Customer vs Owner/Admin) -->
+        <div class="mb-5 p-1 bg-slate-100/90 rounded-2xl flex border border-slate-200/80 shadow-inner" id="role-selector-container">
+          <button id="role-btn-customer" type="button" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm bg-white text-slate-900 flex items-center justify-center space-x-1.5">
+            <span>👤 Customer Portal</span>
+          </button>
+          <button id="role-btn-owner" type="button" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center space-x-1.5">
+            <span>👑 Owner & DB Console</span>
+          </button>
+        </div>
+
         <!-- Auth Method Tabs -->
         <div class="flex p-1 bg-slate-100 rounded-2xl mb-6 border border-slate-200/60">
           <button id="tab-btn-phone" type="button" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm bg-white text-slate-900">
@@ -195,10 +205,13 @@
 
       </div>
 
-      <!-- Quick Demo Login Helper -->
-      <div class="mt-5 text-center">
-        <button id="btn-fill-demo" class="text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors">
-          ⚡ Quick Demo: Use local test account
+      <!-- Quick Demo Login Helpers -->
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-xs">
+        <button id="btn-fill-customer-demo" type="button" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 shadow-sm hover:border-purple-300 font-bold text-slate-700 hover:text-purple-700 transition flex items-center space-x-1.5">
+          <span>👤 Demo Customer Login</span>
+        </button>
+        <button id="btn-fill-owner-demo" type="button" class="px-3.5 py-2 rounded-xl bg-slate-900 text-white shadow-sm hover:bg-slate-800 font-bold transition flex items-center space-x-1.5">
+          <span>👑 Demo Owner & DB Login</span>
         </button>
       </div>
 

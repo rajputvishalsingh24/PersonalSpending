@@ -67,10 +67,25 @@ def init_db() -> None:
         ensure_column(cursor, "users", "phone_verified", "INTEGER DEFAULT 0")
         ensure_column(cursor, "users", "account_status", "TEXT DEFAULT 'active'")
         ensure_column(cursor, "users", "default_currency", "TEXT DEFAULT 'INR'")
+        ensure_column(cursor, "users", "role", "TEXT DEFAULT 'customer'")
         ensure_column(cursor, "users", "updated_at", "TEXT DEFAULT ''")
 
         cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email) WHERE email IS NOT NULL;")
         cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone) WHERE phone IS NOT NULL;")
+
+        # Audit logs table for Owner / Database administration
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS audit_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                action TEXT NOT NULL,
+                entity_type TEXT NOT NULL,
+                entity_id INTEGER,
+                details TEXT,
+                created_at TEXT NOT NULL
+            );
+        """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_logs(created_at);")
 
         # 2. Sessions table
         cursor.execute("""
@@ -247,26 +262,36 @@ def init_db() -> None:
         ensure_column(cursor, "user_settings", "user_id", "INTEGER DEFAULT 1")
 
         # Ensure default demo user exists (id = 1)
-        cursor.execute("SELECT id, email, password_hash FROM users WHERE id = 1;")
+        cursor.execute("SELECT id, email, password_hash, phone FROM users WHERE id = 1;")
         row = cursor.fetchone()
         demo_hash = "pbkdf2_sha256$200000$66c82bfaf522a96217e62fa7989c885f37fcd2846849850251c37851b46f04f9$2f652abdf81754c96387ffaf1746049f6cfb479b943ce932ef91f3fa868377f0"
+        
+        cursor.execute("SELECT id FROM users WHERE phone = '+919876543210' AND id != 1;")
+        demo_phone_taken = cursor.fetchone() is not None
+        safe_demo_phone = None if demo_phone_taken else '+919876543210'
+
         if not row:
             cursor.execute("""
                 INSERT INTO users (
-                    id, full_name, display_name, email, phone, phone_verified, password_hash, default_currency, email_verified, created_at, updated_at
-                ) VALUES (1, 'Personal User', 'Personal User', 'demo@spendsense.local', '+919876543210', 1, ?, 'INR', 1, ?, ?);
-            """, (demo_hash, now_iso, now_iso))
+                    id, full_name, display_name, email, phone, phone_verified, password_hash, default_currency, email_verified, role, created_at, updated_at
+                ) VALUES (1, 'Aarav Sharma', 'Aarav', 'demo@spendsense.local', ?, 1, ?, 'INR', 1, 'customer', ?, ?);
+            """, (safe_demo_phone, demo_hash, now_iso, now_iso))
         else:
-            cursor.execute("""
-                UPDATE users SET email = COALESCE(email, 'demo@spendsense.local'),
-                                 phone = COALESCE(phone, '+919876543210'),
-                                 phone_verified = 1,
-                                 password_hash = COALESCE(password_hash, ?),
-                                 full_name = COALESCE(full_name, 'Personal User'),
-                                 display_name = COALESCE(display_name, 'Personal User'),
-                                 email_verified = 1
-                WHERE id = 1;
-            """, (demo_hash,))
+            try:
+                cursor.execute("""
+                    UPDATE users SET email = COALESCE(email, 'demo@spendsense.local'),
+                                     phone_verified = 1,
+                                     password_hash = COALESCE(password_hash, ?),
+                                     full_name = COALESCE(full_name, 'Aarav Sharma'),
+                                     display_name = COALESCE(display_name, 'Aarav'),
+                                     role = COALESCE(role, 'customer'),
+                                     email_verified = 1
+                    WHERE id = 1;
+                """, (demo_hash,))
+                if safe_demo_phone and not row["phone"]:
+                    cursor.execute("UPDATE users SET phone = ? WHERE id = 1;", (safe_demo_phone,))
+            except Exception:
+                pass
 
         # Backfill user_id = 1 on any existing records where user_id is NULL
         for tbl in ["uploads", "categories", "category_mappings", "transactions", "budgets", "recurring_transactions", "insights"]:
@@ -298,3 +323,20 @@ def init_db() -> None:
                     "INSERT INTO categories (user_id, category_name, category_type, is_default, created_at) VALUES (1, ?, 'income', 1, ?);",
                     (cat, now_iso)
                 )
+
+        # Seed default Owner / Admin account if none exists
+        cursor.execute("SELECT id FROM users WHERE role = 'owner';")
+        if not cursor.fetchone():
+            cursor.execute("SELECT id FROM users WHERE phone = '+919999999999' OR email = 'owner@spendsense.ai';")
+            if not cursor.fetchone():
+                cursor.execute("""
+                    INSERT INTO users (
+                        id, full_name, display_name, email, phone, email_verified, phone_verified,
+                        account_status, default_currency, role, created_at, updated_at
+                    ) VALUES (
+                        99, 'SpendSense Platform Owner', 'Owner', 'owner@spendsense.ai', '+919999999999',
+                        1, 1, 'active', 'INR', 'owner', ?, ?
+                    );
+                """, (now_iso, now_iso))
+
+

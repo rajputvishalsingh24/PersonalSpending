@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse
 import logging
 from backend.config import APP_NAME, APP_VERSION, FRONTEND_DIR, validate_production_config, IS_VERCEL
 from backend.database import init_db
-from backend.routers import auth, uploads, transactions, analytics, budgets, reports, settings
+from backend.routers import auth, uploads, transactions, analytics, budgets, reports, settings, admin
 
 logger = logging.getLogger("spendsense")
 
@@ -61,6 +61,7 @@ app.include_router(analytics.router)
 app.include_router(budgets.router)
 app.include_router(reports.router)
 app.include_router(settings.router)
+app.include_router(admin.router)
 
 # Health Check
 @app.get("/api/health", tags=["Health"])

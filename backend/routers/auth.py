@@ -159,13 +159,14 @@ async def register_with_email(req: RegisterEmailRequest, response: Response):
                 detail="An account with this email address already exists. Please log in instead."
             )
 
+        user_role = req.role if req.role in ["customer", "owner"] else "customer"
         cursor.execute("""
             INSERT INTO users (
                 full_name, display_name, email, password_hash,
-                email_verified, phone_verified, account_status, default_currency,
+                email_verified, phone_verified, account_status, default_currency, role,
                 created_at, updated_at
-            ) VALUES (?, ?, ?, ?, 0, 0, 'active', 'INR', ?, ?);
-        """, (name_clean, first_name, email_clean, hashed_pw, now_iso, now_iso))
+            ) VALUES (?, ?, ?, ?, 0, 0, 'active', 'INR', ?, ?, ?);
+        """, (name_clean, first_name, email_clean, hashed_pw, user_role, now_iso, now_iso))
         new_user_id = cursor.lastrowid
 
         cursor.execute("SELECT * FROM users WHERE id = ?;", (new_user_id,))
@@ -371,14 +372,14 @@ async def verify_otp_endpoint(req: VerifyOtpRequest, response: Response):
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail="No account found with this mobile number. Please register first."
                 )
-            # Register new user with this phone
             display = req.full_name.strip() if req.full_name else "SpendSense User"
+            user_role = req.role if req.role in ["customer", "owner"] else "customer"
             cursor.execute("""
                 INSERT INTO users (
-                    full_name, display_name, phone, phone_verified, email_verified, account_status, default_currency,
+                    full_name, display_name, phone, phone_verified, email_verified, account_status, default_currency, role,
                     created_at, updated_at
-                ) VALUES (?, ?, ?, 1, 0, 'active', 'INR', ?, ?);
-            """, (display, display.split()[0], normalized, now_iso, now_iso))
+                ) VALUES (?, ?, ?, 1, 0, 'active', 'INR', ?, ?, ?);
+            """, (display, display.split()[0], normalized, user_role, now_iso, now_iso))
             user_id = cursor.lastrowid
             cursor.execute("SELECT * FROM users WHERE id = ?;", (user_id,))
             user_row = cursor.fetchone()

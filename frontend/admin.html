@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendSense — Database Manager & Owner Console</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .admin-glass {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .admin-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .admin-tab-active {
+      background: #7c3aed;
+      color: #ffffff;
+      box-shadow: 0 4px 14px 0 rgba(124, 58, 237, 0.39);
+    }
+    .code-editor {
+      font-family: 'Fira Code', 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body class="bg-[#0B0F17] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-purple-500 selection:text-white">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Ambient Aurora Glow Background -->
+  <div class="aurora-container opacity-25">
+    <div class="aurora-blob aurora-1"></div>
+    <div class="aurora-blob aurora-2"></div>
+    <div class="aurora-blob aurora-3"></div>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header class="admin-glass border-b border-slate-800 sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <a href="index.html" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-xl shadow-lg group-hover:scale-105 transition-transform">
+          👑
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-black text-lg tracking-tight text-white">SpendSense</span>
+            <span class="px-2 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30">Owner & DB Studio</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium">Exact SQLite Database & Platform Management</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center space-x-3 text-xs">
+      <div class="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60 text-slate-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-mono font-medium" id="db-health-badge">SQLite v3.45.1 • WAL Mode Active</span>
+      </div>
+
+      <a href="dashboard.html" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-slate-200 transition flex items-center space-x-1.5">
+        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span>Customer Dashboard</span>
+      </a>
+
+      <button id="btn-owner-logout" class="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 font-bold transition flex items-center space-x-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Console Body -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8 relative z-10">
+
+    <!-- Top KPI Cards Grid (Animated Counters & Live DB Metrics) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 perspective-container reveal-init">
+      
+      <div class="tilt-card admin-card p-4 rounded-2xl space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Registered Users</span>
+        <h3 id="stat-total-users" class="text-2xl font-black text-white" data-counter>5</h3>
+        <span class="text-[10px] text-emerald-400 font-semibold">Active in SQLite DB</span>
+      </div>
+
+      <div class="tilt-card admin-card p-4 rounded-2xl space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Transactions</span>
+        <h3 id="stat-total-txns" class="text-2xl font-black text-white" data-counter>25</h3>
+        <span class="text-[10px] text-purple-400 font-semibold">Tracked records</span>
+      </div>
+
+      <div class="tilt-card admin-card p-4 rounded-2xl space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Volume Tracked</span>
+        <h3 id="stat-total-vol" class="text-2xl font-black text-white">₹1,97,850</h3>
+        <span class="text-[10px] text-indigo-400 font-semibold">Audited INR flow</span>
+      </div>
+
+      <div class="tilt-card admin-card p-4 rounded-2xl space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Database Size</span>
+        <h3 id="stat-db-size" class="text-2xl font-black text-white">348 KB</h3>
+        <span class="text-[10px] text-slate-400 font-semibold">spendsense.db</span>
+      </div>
+
+      <div class="tilt-card admin-card p-4 rounded-2xl space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">DB Tables</span>
+        <h3 id="stat-table-count" class="text-2xl font-black text-white">6</h3>
+        <span class="text-[10px] text-emerald-400 font-semibold">Normalized schema</span>
+      </div>
+
+      <div class="tilt-card admin-card p-4 rounded-2xl space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Integrity Status</span>
+        <h3 id="stat-integrity" class="text-2xl font-black text-emerald-400 flex items-center space-x-1">
+          <span>OK</span>
+          <span class="text-base">✓</span>
+        </h3>
+        <span class="text-[10px] text-slate-400 font-semibold">PRAGMA Verified</span>
+      </div>
+
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center space-x-2 border-b border-slate-800 pb-3 overflow-x-auto text-xs font-bold">
+      <button id="tab-btn-explorer" class="px-4 py-2 rounded-xl transition-all admin-tab-active flex items-center space-x-2">
+        <span>🗄️ Database Explorer & Tables</span>
+      </button>
+      <button id="tab-btn-sql" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white transition-all flex items-center space-x-2">
+        <span>⚡ Interactive SQL Console</span>
+      </button>
+      <button id="tab-btn-customers" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white transition-all flex items-center space-x-2">
+        <span>👥 Customer Accounts</span>
+      </button>
+      <button id="tab-btn-operations" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white transition-all flex items-center space-x-2">
+        <span>⚙️ Operations & Backups</span>
+      </button>
+    </div>
+
+    <!-- SECTION 1: Database Explorer & Table Data Grid -->
+    <section id="section-explorer" class="space-y-6">
+      
+      <!-- Table Selector & Action Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        
+        <!-- Table Chips -->
+        <div class="flex flex-wrap items-center gap-2" id="table-chips-container">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Search Table Input -->
+        <div class="relative w-full sm:w-72">
+          <input type="text" id="table-search-input" placeholder="Search rows in current table..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 pl-8 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-500">
+          <svg class="w-4 h-4 text-slate-500 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+
+      </div>
+
+      <!-- Live Data Table Card -->
+      <div class="admin-card rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
+        <div class="p-4 bg-slate-900/60 border-b border-slate-800 flex items-center justify-between text-xs">
+          <div class="flex items-center space-x-2">
+            <span class="font-bold text-white uppercase tracking-wider" id="active-table-name">transactions</span>
+            <span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px]" id="table-record-count">0 records</span>
+          </div>
+          <div class="flex items-center space-x-2 text-slate-400 text-[11px]">
+            <span>Double-click row to view details</span>
+          </div>
+        </div>
+
+        <!-- Data Grid -->
+        <div class="overflow-x-auto max-h-[500px]">
+          <table class="w-full text-left text-xs text-slate-300" id="db-data-table">
+            <thead class="bg-slate-900/90 text-[11px] font-bold text-slate-400 uppercase tracking-wider sticky top-0 z-20 border-b border-slate-800">
+              <tr id="table-header-row">
+                <!-- Injected dynamically -->
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]" id="table-body-rows">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table Footer Pagination -->
+        <div class="p-3.5 bg-slate-900/40 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <span id="pagination-info">Showing page 1</span>
+          <div class="flex items-center space-x-2">
+            <button id="btn-prev-page" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+            <button id="btn-next-page" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- SECTION 2: Interactive SQL Query Console -->
+    <section id="section-sql" class="space-y-6 hidden">
+      <div class="admin-card rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-extrabold text-white">Live SQL Query Console</h3>
+            <p class="text-xs text-slate-400">Execute direct read queries, aggregations, and schema PRAGMAs on your SQLite database.</p>
+          </div>
+          <button id="btn-run-sql" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 font-bold text-white text-xs transition flex items-center space-x-1.5 shadow-lg shadow-purple-600/30">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+            <span>Run SQL (Ctrl+Enter)</span>
+          </button>
+        </div>
+
+        <!-- Pre-built Quick SQL Chips -->
+        <div class="flex flex-wrap items-center gap-2 pt-1 text-xs">
+          <span class="text-slate-500 text-[11px] font-bold">Quick Queries:</span>
+          <button type="button" class="sql-preset-chip px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px]" data-query="SELECT * FROM transactions WHERE amount > 5000 ORDER BY amount DESC LIMIT 10;">Top 10 High Value Transactions</button>
+          <button type="button" class="sql-preset-chip px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px]" data-query="SELECT category, COUNT(*) as count, SUM(amount) as total FROM transactions GROUP BY category ORDER BY total ASC;">Category Totals Breakdown</button>
+          <button type="button" class="sql-preset-chip px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px]" data-query="SELECT id, full_name, email, phone, role, account_status FROM users;">All Registered Users</button>
+          <button type="button" class="sql-preset-chip px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px]" data-query="PRAGMA integrity_check;">Run Integrity Check</button>
+        </div>
+
+        <!-- Query Input Box -->
+        <div class="relative">
+          <textarea id="sql-query-input" rows="4" class="w-full bg-[#05070B] border border-slate-800 rounded-xl p-4 font-mono text-xs sm:text-sm text-purple-300 focus:outline-none focus:ring-1 focus:ring-purple-500 code-editor" spellcheck="false">SELECT category, COUNT(*) as tx_count, SUM(amount) as net_amount FROM transactions GROUP BY category ORDER BY net_amount ASC;</textarea>
+        </div>
+
+        <!-- Query Results Container -->
+        <div id="sql-results-container" class="space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span id="sql-execution-stats">Press Run to execute query</span>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/50 max-h-72">
+            <table class="w-full text-left text-xs" id="sql-results-table">
+              <thead class="bg-slate-900 text-slate-400 uppercase tracking-wider text-[11px] font-bold" id="sql-table-head">
+                <!-- Dynamic -->
+              </thead>
+              <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]" id="sql-table-body">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: Customer Accounts Management -->
+    <section id="section-customers" class="space-y-6 hidden">
+      <div class="admin-card rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-extrabold text-white">Customer Accounts Directory</h3>
+            <p class="text-xs text-slate-400">Audit all customer credentials, transaction volume, and account statuses.</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold" id="customers-badge-count">
+            4 Active Customers
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3.5">ID</th>
+                <th class="p-3.5">Customer Name</th>
+                <th class="p-3.5">Contact Details</th>
+                <th class="p-3.5">Role</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5">Transactions</th>
+                <th class="p-3.5">Total Spent</th>
+                <th class="p-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60" id="customers-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Database Operations & Maintenance -->
+    <section id="section-operations" class="space-y-6 hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Operation 1: Vacuum & Optimize -->
+        <div class="admin-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl">
+              🧹
+            </div>
+            <div>
+              <h4 class="font-extrabold text-white text-sm">Vacuum & Optimize SQLite Database</h4>
+              <p class="text-xs text-slate-400">Rebuild database file, reclaim unused space, and re-index B-Trees.</p>
+            </div>
+          </div>
+          <button id="btn-op-vacuum" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-xs text-white transition flex items-center justify-center space-x-2">
+            <span>Run VACUUM Statement</span>
+          </button>
+        </div>
+
+        <!-- Operation 2: Export Full Database Backup -->
+        <div class="admin-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl">
+              📦
+            </div>
+            <div>
+              <h4 class="font-extrabold text-white text-sm">Export Full Database Backup</h4>
+              <p class="text-xs text-slate-400">Generate an instant complete JSON snapshot of all tables and schemas.</p>
+            </div>
+          </div>
+          <button id="btn-op-backup" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-bold text-xs text-white transition flex items-center justify-center space-x-2 shadow-lg shadow-emerald-600/20">
+            <span>Download Backup JSON</span>
+          </button>
+        </div>
+
+        <!-- Operation 3: Re-seed Sample Production Data -->
+        <div class="admin-card rounded-2xl p-6 border border-slate-800 space-y-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl">
+              🔄
+            </div>
+            <div>
+              <h4 class="font-extrabold text-white text-sm">Re-seed Production Demo Dataset</h4>
+              <p class="text-xs text-slate-400">Populate 25 realistic transactions, budgets, subscriptions, and customers.</p>
+            </div>
+          </div>
+          <button id="btn-op-seed" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-xs text-white transition flex items-center justify-center space-x-2">
+            <span>Re-seed Sample Data</span>
+          </button>
+        </div>
+
+        <!-- Operation 4: Danger Zone Wipe -->
+        <div class="admin-card rounded-2xl p-6 border border-rose-900/40 bg-rose-950/10 space-y-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl">
+              ⚠️
+            </div>
+            <div>
+              <h4 class="font-extrabold text-rose-300 text-sm">Clear Database Records</h4>
+              <p class="text-xs text-slate-400">Delete all transactions, budgets, and recurring rules. Owner preserved.</p>
+            </div>
+          </div>
+          <button id="btn-op-wipe" class="w-full py-2.5 rounded-xl bg-rose-600/80 hover:bg-rose-600 font-bold text-xs text-white transition flex items-center justify-center space-x-2">
+            <span>Wipe Database Records</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

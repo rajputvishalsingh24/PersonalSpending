@@ -69,6 +69,21 @@ const INITIAL_DEMO_RECURRING = [
   { id: 6, merchant: "Spotify", category: "Subscriptions", average_amount: 119.0, frequency: "monthly", confidence_score: 0.99, status: "confirmed", is_subscription: 1, is_essential: 0, next_expected_date: "2026-06-12" }
 ];
 
+const INITIAL_DEMO_USERS = [
+  { id: 1, full_name: "Aarav Sharma", email: "aarav@spendsense.local", phone: "+919876543210", role: "customer", account_status: "active", created_at: "2026-04-10T10:00:00Z", total_transactions: 25, total_spent: 84350 },
+  { id: 2, full_name: "Priya Patel", email: "priya@example.com", phone: "+919812345678", role: "customer", account_status: "active", created_at: "2026-04-18T14:30:00Z", total_transactions: 18, total_spent: 42100 },
+  { id: 3, full_name: "Rohan Verma", email: "rohan@example.com", phone: "+919765432109", role: "customer", account_status: "active", created_at: "2026-05-02T09:15:00Z", total_transactions: 12, total_spent: 31200 },
+  { id: 4, full_name: "Sneha Reddy", email: "sneha@example.com", phone: "+919890123456", role: "customer", account_status: "active", created_at: "2026-05-08T11:20:00Z", total_transactions: 9, total_spent: 19800 },
+  { id: 99, full_name: "SpendSense Platform Owner", email: "owner@spendsense.ai", phone: "+919999999999", role: "owner", account_status: "active", created_at: "2026-01-01T00:00:00Z", total_transactions: 0, total_spent: 0 }
+];
+
+const INITIAL_AUDIT_LOGS = [
+  { id: 1, user_id: 99, action: "SYSTEM_INITIALIZE", entity_type: "database", entity_id: 1, details: "SQLite database v3.45 initialized with WAL mode and foreign keys enabled", created_at: "2026-05-15T08:00:00Z" },
+  { id: 2, user_id: 1, action: "STATEMENT_UPLOAD", entity_type: "uploads", entity_id: 1, details: "Parsed 25 transactions from HDFC_Statement_May2026.csv", created_at: "2026-05-15T08:30:00Z" },
+  { id: 3, user_id: 1, action: "BUDGET_CREATED", entity_type: "budgets", entity_id: 1, details: "Created monthly budget for Groceries: ₹10,000", created_at: "2026-05-15T09:00:00Z" },
+  { id: 4, user_id: 99, action: "DATABASE_VACUUM", entity_type: "database", entity_id: null, details: "Automated storage defragmentation completed cleanly", created_at: "2026-05-15T11:00:00Z" }
+];
+
 const INITIAL_DEMO_INSIGHTS = [
   { id: 1, insight_type: "behaviour_trend", title: "Weekend Dining & Takeaway Surge", summary: "Over 48% of your dining and food delivery expenses occur between Friday evening and Sunday night.", supporting_evidence: "₹2,560 spent across 3 orders from Swiggy & Zomato.", severity: "warning", suggested_action: "Set a weekend delivery limit to save up to ₹1,200/month.", status: "active", period: "May 2026" },
   { id: 2, insight_type: "savings_opportunity", title: "Digital Subscriptions Optimization", summary: "You have 3 active monthly subscriptions totalling ₹1,767 per month.", supporting_evidence: "Netflix (₹649), Spotify (₹119), Airtel Broadband (₹999).", severity: "info", suggested_action: "Review unused video streaming tiers or consider annual billing discounts.", status: "active", period: "May 2026" },
@@ -80,7 +95,9 @@ class MockBackend {
     let raw = localStorage.getItem("spendsense_store_v1");
     if (!raw) {
       const initial = {
-        user: { id: 1, full_name: "Personal User", email: "demo@spendsense.local", phone: "+919876543210", email_verified: 1, phone_verified: 1, default_currency: "INR" },
+        user: { id: 1, full_name: "Aarav Sharma", email: "aarav@spendsense.local", phone: "+919876543210", role: "customer", email_verified: 1, phone_verified: 1, default_currency: "INR" },
+        users: INITIAL_DEMO_USERS,
+        audit_logs: INITIAL_AUDIT_LOGS,
         transactions: INITIAL_DEMO_TRANSACTIONS,
         budgets: INITIAL_DEMO_BUDGETS,
         recurring: INITIAL_DEMO_RECURRING,
@@ -89,7 +106,7 @@ class MockBackend {
           { filename: "backup_spendsense_demo_20260515.db", size_human: "184 KB", created_at: "2026-05-15T12:00:00Z" }
         ],
         settings: {
-          display_name: "Personal User",
+          display_name: "Aarav Sharma",
           default_currency: "INR",
           anomaly_sensitivity: "medium",
           budget_drift_threshold: "0.80",
@@ -117,7 +134,11 @@ class MockBackend {
       return initial;
     }
     try {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed.users) parsed.users = INITIAL_DEMO_USERS;
+      if (!parsed.audit_logs) parsed.audit_logs = INITIAL_AUDIT_LOGS;
+      if (parsed.user && !parsed.user.role) parsed.user.role = "customer";
+      return parsed;
     } catch (e) {
       localStorage.removeItem("spendsense_store_v1");
       return MockBackend.getStore();
@@ -138,44 +159,63 @@ class MockBackend {
     if (endpoint === "/api/auth/me") {
       const u = store.user || {
         id: 1,
-        full_name: "Personal User",
-        display_name: "Personal",
-        email: "demo@spendsense.local",
+        full_name: "Aarav Sharma",
+        display_name: "Aarav",
+        email: "aarav@spendsense.local",
         phone: "+919876543210",
+        role: "customer",
         email_verified: 1,
         phone_verified: 1,
         default_currency: "INR"
       };
       if (!u.display_name && u.full_name) u.display_name = u.full_name.split(" ")[0];
+      if (!u.role) u.role = "customer";
       return u;
     }
     if (endpoint === "/api/auth/login") {
-      const user = {
+      const isOwner = (body.role === "owner") || 
+                      (body.email && body.email.toLowerCase().includes("owner")) || 
+                      (body.phone && body.phone.includes("9999999999"));
+      const user = isOwner ? {
+        id: 99,
+        full_name: "SpendSense Platform Owner",
+        display_name: "Owner",
+        email: "owner@spendsense.ai",
+        phone: "+919999999999",
+        role: "owner",
+        email_verified: 1,
+        phone_verified: 1,
+        default_currency: "INR"
+      } : {
         ...store.user,
+        role: "customer",
         email: body.email || store.user.email,
         phone: body.phone || store.user.phone
       };
       if (!user.display_name && user.full_name) user.display_name = user.full_name.split(" ")[0];
       store.user = user;
       MockBackend.saveStore(store);
-      const token = "mock_session_token_12345";
+      const token = isOwner ? "mock_session_token_owner_99" : "mock_session_token_12345";
       localStorage.setItem("spendsense_token", token);
       sessionStorage.setItem("spendsense_token", token);
       return { message: "Login successful.", user, session_token: token, token };
     }
     if (endpoint === "/api/auth/register") {
-      const fullName = body.full_name || "SpendSense User";
+      const isOwner = (body.role === "owner");
+      const fullName = body.full_name || (isOwner ? "SpendSense Platform Owner" : "SpendSense User");
       const newUser = {
         id: Date.now(),
         full_name: fullName,
         display_name: fullName.split(" ")[0],
         email: body.email || "",
         phone: body.phone || "",
+        role: isOwner ? "owner" : "customer",
         email_verified: body.email ? 0 : 1,
         phone_verified: body.phone ? 1 : 0,
         default_currency: "INR"
       };
       store.user = newUser;
+      store.users.unshift(newUser);
       MockBackend.saveStore(store);
       const token = "mock_session_token_" + newUser.id;
       localStorage.setItem("spendsense_token", token);
@@ -197,17 +237,19 @@ class MockBackend {
       const countryCode = body.country_code || "+91";
       const rawPhone = (body.phone || "").replace(/[^0-9]/g, "");
       const normalizedPhone = countryCode + rawPhone;
-      const fullName = body.full_name || store.user.full_name || "SpendSense User";
+      const isOwner = (body.role === "owner") || normalizedPhone.includes("9999999999");
+      const fullName = body.full_name || (isOwner ? "SpendSense Platform Owner" : (store.user ? store.user.full_name : "SpendSense User"));
       const user = {
         ...store.user,
-        phone: normalizedPhone || store.user.phone || "+919876543210",
+        phone: normalizedPhone || (isOwner ? "+919999999999" : (store.user ? store.user.phone : "+919876543210")),
         phone_verified: 1,
+        role: isOwner ? "owner" : (body.role || (store.user ? store.user.role : "customer") || "customer"),
         full_name: fullName,
-        display_name: fullName.split(" ")[0]
+        display_name: isOwner ? "Owner" : fullName.split(" ")[0]
       };
       store.user = user;
       MockBackend.saveStore(store);
-      const token = "mock_session_token_12345";
+      const token = isOwner ? "mock_session_token_owner_99" : "mock_session_token_12345";
       localStorage.setItem("spendsense_token", token);
       sessionStorage.setItem("spendsense_token", token);
       return {
@@ -490,8 +532,220 @@ class MockBackend {
       MockBackend.saveStore(store);
       return { success: true, message: "Instant database backup snapshot created.", filename: bName };
     }
-    if (endpoint === "/api/reports/restore") {
-      return { success: true, message: "Database restored successfully from backup." };
+    // 11. Owner & Database Management Endpoints
+    if (endpoint === "/api/admin/stats") {
+      let income = 0;
+      let expenses = 0;
+      store.transactions.forEach(t => {
+        if (t.transaction_type === "income") income += Math.abs(t.amount);
+        else if (t.transaction_type === "expense") expenses += Math.abs(t.amount);
+      });
+      return {
+        database_file: "spendsense.db (SQLite v3.45.1)",
+        database_size: "348 KB",
+        database_size_bytes: 356352,
+        sqlite_version: "3.45.1 (WAL Mode)",
+        integrity_status: "ok",
+        total_users: store.users ? store.users.length : 5,
+        total_customers: store.users ? store.users.filter(u => u.role === "customer").length : 4,
+        total_transactions: store.transactions.length,
+        total_volume_inr: Math.round(income + expenses),
+        total_budgets: store.budgets.length,
+        total_recurring: store.recurring.length,
+        status: "healthy"
+      };
+    }
+
+    if (endpoint === "/api/admin/tables") {
+      return {
+        tables: [
+          { table_name: "users", row_count: store.users ? store.users.length : 5, columns: ["id", "full_name", "email", "phone", "role", "account_status", "created_at"] },
+          { table_name: "transactions", row_count: store.transactions.length, columns: ["id", "transaction_date", "merchant", "description", "amount", "category", "transaction_type"] },
+          { table_name: "budgets", row_count: store.budgets.length, columns: ["id", "category", "budget_amount", "spent", "percentage", "status"] },
+          { table_name: "recurring_rules", row_count: store.recurring.length, columns: ["id", "merchant", "category", "average_amount", "frequency", "status"] },
+          { table_name: "audit_logs", row_count: store.audit_logs ? store.audit_logs.length : 4, columns: ["id", "action", "entity_type", "details", "created_at"] }
+        ]
+      };
+    }
+
+    if (endpoint.startsWith("/api/admin/tables/")) {
+      const parts = endpoint.split("/").filter(Boolean);
+      const tableName = parts[3];
+      const rowId = parts[4] ? parseInt(parts[4]) : null;
+
+      let dataset = [];
+      if (tableName === "users") dataset = store.users || [];
+      else if (tableName === "transactions") dataset = store.transactions || [];
+      else if (tableName === "budgets") dataset = store.budgets || [];
+      else if (tableName === "recurring_rules") dataset = store.recurring || [];
+      else if (tableName === "audit_logs") dataset = store.audit_logs || [];
+
+      if (method === "DELETE" && rowId) {
+        const idx = dataset.findIndex(r => r.id === rowId);
+        if (idx !== -1) {
+          dataset.splice(idx, 1);
+          if (!store.audit_logs) store.audit_logs = [];
+          store.audit_logs.unshift({
+            id: Date.now(),
+            user_id: 99,
+            action: "ROW_DELETE",
+            entity_type: tableName,
+            entity_id: rowId,
+            details: `Deleted record ID ${rowId} from ${tableName}`,
+            created_at: new Date().toISOString()
+          });
+          MockBackend.saveStore(store);
+          return { message: `Row ${rowId} deleted successfully.` };
+        }
+        return { message: "Row not found." };
+      }
+
+      // GET Table rows with pagination & search
+      let rows = [...dataset];
+      if (params.search) {
+        const q = params.search.toLowerCase();
+        rows = rows.filter(r => JSON.stringify(r).toLowerCase().includes(q));
+      }
+      const page = parseInt(params.page) || 1;
+      const pageSize = parseInt(params.page_size) || 20;
+      const total = rows.length;
+      const paginated = rows.slice((page - 1) * pageSize, page * pageSize);
+      const columns = rows.length > 0 ? Object.keys(rows[0]) : ["id"];
+
+      return {
+        table_name: tableName,
+        columns,
+        rows: paginated,
+        total_rows: total,
+        page,
+        page_size: pageSize,
+        total_pages: Math.max(1, Math.ceil(total / pageSize))
+      };
+    }
+
+    if (endpoint === "/api/admin/query" && method === "POST") {
+      const q = (body.query || "").trim();
+      const qLower = q.toLowerCase();
+      const startTime = performance.now();
+
+      // Check query target table
+      let resultRows = [];
+      let columns = [];
+
+      if (qLower.includes("from users")) {
+        resultRows = (store.users || []).map(u => [u.id, u.full_name, u.email, u.phone, u.role, u.account_status, u.created_at]);
+        columns = ["id", "full_name", "email", "phone", "role", "account_status", "created_at"];
+      } else if (qLower.includes("from transactions")) {
+        if (qLower.includes("group by category")) {
+          const map = {};
+          store.transactions.forEach(t => {
+            if (!map[t.category]) map[t.category] = { count: 0, sum: 0 };
+            map[t.category].count += 1;
+            map[t.category].sum += Math.abs(t.amount);
+          });
+          columns = ["category", "count", "total_sum"];
+          resultRows = Object.entries(map).map(([c, v]) => [c, v.count, `₹${v.sum.toLocaleString('en-IN')}`]);
+        } else {
+          columns = ["id", "transaction_date", "merchant", "amount", "transaction_type", "category"];
+          resultRows = store.transactions.slice(0, 50).map(t => [t.id, t.transaction_date, t.merchant, `₹${Math.abs(t.amount).toLocaleString('en-IN')}`, t.transaction_type, t.category]);
+        }
+      } else if (qLower.includes("from budgets")) {
+        columns = ["id", "category", "budget_amount", "spent", "percentage", "status"];
+        resultRows = store.budgets.map(b => [b.id, b.category, `₹${b.budget_amount}`, `₹${b.spent}`, `${b.percentage}%`, b.status]);
+      } else if (qLower.includes("from audit_logs")) {
+        columns = ["id", "action", "entity_type", "details", "created_at"];
+        resultRows = (store.audit_logs || []).map(l => [l.id, l.action, l.entity_type, l.details, l.created_at]);
+      } else if (qLower.includes("integrity_check")) {
+        columns = ["integrity_check"];
+        resultRows = [["ok"]];
+      } else {
+        columns = ["status", "result"];
+        resultRows = [["SUCCESS", `Executed: ${q.slice(0, 60)}...`]];
+      }
+
+      const execTime = Math.round((performance.now() - startTime) * 100) / 100;
+      return {
+        columns,
+        rows: resultRows,
+        row_count: resultRows.length,
+        execution_time_ms: Math.max(0.8, execTime),
+        error: null
+      };
+    }
+
+    if (endpoint === "/api/admin/users") {
+      const usersWithStats = (store.users || []).map(u => {
+        let spent = 0;
+        let count = 0;
+        if (u.id === 1) {
+          store.transactions.forEach(t => {
+            if (t.transaction_type === "expense") spent += Math.abs(t.amount);
+            count++;
+          });
+        } else {
+          spent = u.total_spent || 24000;
+          count = u.total_transactions || 10;
+        }
+        return {
+          ...u,
+          transaction_count: count,
+          total_spent: spent
+        };
+      });
+      return { users: usersWithStats };
+    }
+
+    if (endpoint.startsWith("/api/admin/users/") && endpoint.endsWith("/toggle-status")) {
+      const uId = parseInt(endpoint.split("/")[4]);
+      const user = (store.users || []).find(u => u.id === uId);
+      if (user) {
+        user.account_status = user.account_status === "active" ? "suspended" : "active";
+        MockBackend.saveStore(store);
+        return { user_id: uId, new_status: user.account_status };
+      }
+      return { message: "User not found." };
+    }
+
+    if (endpoint === "/api/admin/vacuum" && method === "POST") {
+      if (!store.audit_logs) store.audit_logs = [];
+      store.audit_logs.unshift({
+        id: Date.now(),
+        user_id: 99,
+        action: "DATABASE_VACUUM",
+        entity_type: "database",
+        entity_id: null,
+        details: "Storage defragmented and B-Tree indexes rebuilt.",
+        created_at: new Date().toISOString()
+      });
+      MockBackend.saveStore(store);
+      return { message: "Database vacuumed and defragmented successfully." };
+    }
+
+    if (endpoint === "/api/admin/seed" && method === "POST") {
+      store.transactions = INITIAL_DEMO_TRANSACTIONS;
+      store.budgets = INITIAL_DEMO_BUDGETS;
+      store.recurring = INITIAL_DEMO_RECURRING;
+      store.insights = INITIAL_DEMO_INSIGHTS;
+      store.users = INITIAL_DEMO_USERS;
+      MockBackend.saveStore(store);
+      return { message: "Production sample database dataset re-seeded successfully." };
+    }
+
+    if (endpoint === "/api/admin/wipe" && method === "POST") {
+      store.transactions = [];
+      store.budgets = [];
+      store.recurring = [];
+      store.insights = [];
+      MockBackend.saveStore(store);
+      return { message: "Database records cleared. System tables preserved." };
+    }
+
+    if (endpoint === "/api/admin/backup") {
+      return {
+        timestamp: new Date().toISOString(),
+        version: "3.45.1",
+        database_dump: store
+      };
     }
 
     // Default Fallback
