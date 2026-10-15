@@ -1,10 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 from backend.database import init_db, get_db
 from backend.services.auth_service import hash_password, create_phone_otp, create_password_reset_token
 
-client = TestClient(app)
+client = TestClient(_app)
 
 @pytest.fixture(autouse=True)
 def setup_test_db():

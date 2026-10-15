@@ -1,10 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 from backend.database import init_db
 from backend.data_generator import generate_demo_dataset
 
-client = TestClient(app)
+client = TestClient(_app)
 
 @pytest.fixture(autouse=True)
 def setup_insights_test():

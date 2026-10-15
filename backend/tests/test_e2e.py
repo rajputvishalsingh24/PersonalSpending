@@ -2,11 +2,11 @@ import os
 import io
 import pytest
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 from backend.database import init_db, get_db
 from backend.config import DB_PATH
 
-client = TestClient(app)
+client = TestClient(_app)
 
 def test_full_end_to_end_acceptance_workflow():
     """

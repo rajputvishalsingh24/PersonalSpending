@@ -1,14 +1,14 @@
 import pytest
 import sqlite3
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 from backend.database import init_db, get_db
 from backend.services.auth_service import validate_and_normalize_phone, create_email_verification_token
 from backend.services.categorizer import categorize_transaction, is_transfer_description, is_credit_card_payment, is_refund_description
 from backend.services.backup_service import create_database_backup, list_database_backups, restore_database_backup
 from backend.services.spending_analyzer import get_summary_metrics
 
-client = TestClient(app)
+client = TestClient(_app)
 
 @pytest.fixture(scope="module", autouse=True)
 def setup_india_test_environment():

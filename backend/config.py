@@ -12,16 +12,24 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent.parent
 BACKEND_DIR = BASE_DIR / "backend"
 FRONTEND_DIR = BASE_DIR / "frontend"
-DATA_DIR = BACKEND_DIR / "data"
-UPLOAD_DIR = BACKEND_DIR / "temp_uploads"
-BACKUP_DIR = DATA_DIR / "backups"
+
+IS_VERCEL = bool(os.getenv("VERCEL") or os.getenv("VERCEL_ENV"))
+
+if IS_VERCEL:
+    DATA_DIR = Path("/tmp/data")
+    UPLOAD_DIR = Path("/tmp/temp_uploads")
+    BACKUP_DIR = DATA_DIR / "backups"
+else:
+    DATA_DIR = BACKEND_DIR / "data"
+    UPLOAD_DIR = BACKEND_DIR / "temp_uploads"
+    BACKUP_DIR = DATA_DIR / "backups"
 
 # Ensure directories exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 BACKUP_DIR.mkdir(parents=True, exist_ok=True)
 
-# Database - Predictable path in backend/data/spendsense.db
+# Database - Predictable path in backend/data/spendsense.db (or /tmp/data on Vercel)
 DB_PATH = DATA_DIR / "spendsense.db"
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 

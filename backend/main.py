@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 import logging
-from backend.config import APP_NAME, APP_VERSION, FRONTEND_DIR, validate_production_config
+from backend.config import APP_NAME, APP_VERSION, FRONTEND_DIR, validate_production_config, IS_VERCEL
 from backend.database import init_db
 from backend.routers import auth, uploads, transactions, analytics, budgets, reports, settings
 
@@ -22,6 +22,18 @@ async def lifespan(app: FastAPI):
             logger.error(f"[CONFIG ERROR] {err}")
     # Initialize SQLite database and seed defaults idempotently on startup
     init_db()
+    if IS_VERCEL:
+        try:
+            from backend.data_generator import generate_demo_dataset
+            from backend.database import get_db
+            with get_db() as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT COUNT(*) FROM transactions WHERE user_id = 1;")
+                count = cursor.fetchone()[0]
+                if count == 0:
+                    generate_demo_dataset(user_id=1)
+        except Exception as e:
+            logger.warning(f"Auto-seed on Vercel: {e}")
     yield
 
 app = FastAPI(
@@ -76,4 +88,14 @@ if FRONTEND_DIR.exists():
         page_file = FRONTEND_DIR / f"{page_name}.html"
         if page_file.exists():
             return FileResponse(page_file)
+        return FileResponse(FRONTEND_DIR / "index.html")
+
+    @app.get("/{page_name}", include_in_schema=False)
+    async def serve_html_without_ext(page_name: str):
+        page_file = FRONTEND_DIR / f"{page_name}.html"
+        if page_file.exists():
+            return FileResponse(page_file)
+        direct_file = FRONTEND_DIR / page_name
+        if direct_file.is_file():
+            return FileResponse(direct_file)
         return FileResponse(FRONTEND_DIR / "index.html")
