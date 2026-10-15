@@ -1,0 +1,26 @@
+Date,Description,Merchant,Amount,Type,Category
+2026-03-01,ACME Corp Monthly Payroll,ACME Corp,95000,Credit,Salary
+2026-03-02,BigBasket Daily Essentials,BigBasket,-2850,Debit,Groceries
+2026-03-03,Transfer to Self Savings Account,Self Transfer,-20000,Debit,Other
+2026-03-04,Swiggy Dinner Order,Swiggy,-780,Debit,Restaurants and Food Delivery
+2026-03-05,Prestige Heights Rent Society,Prestige Heights,-25000,Debit,Housing and Rent
+2026-03-07,HPCL Auto Fuel Pump,HPCL Fuel,-2500,Debit,Fuel
+2026-03-08,HDFC Auto Loan EMI,HDFC Bank,-11500,Debit,Loan Payments
+2026-03-09,Zepto Quick Grocery,Zepto,-1250,Debit,Groceries
+2026-03-10,Netflix Premium 4K Plan,Netflix,-649,Debit,Subscriptions
+2026-03-11,Zomato Weekend Biryani,Zomato,-1240,Debit,Restaurants and Food Delivery
+2026-03-12,Spotify Individual Monthly,Spotify,-119,Debit,Subscriptions
+2026-03-14,Uber Airport Drop Ride,Uber Rides,-850,Debit,Transport
+2026-03-15,Airtel Fiber Broadband Bill,Airtel,-999,Debit,Utilities
+2026-03-16,BESCOM Electricity Bill,BESCOM,-1850,Debit,Utilities
+2026-03-17,Nature's Basket Organic,Nature's Basket,-2400,Debit,Groceries
+2026-03-18,Apollo Pharmacy Medicines,Apollo Pharmacy,-1450,Debit,Healthcare
+2026-03-19,Starbucks Reserve Coffee,Starbucks,-650,Debit,Restaurants and Food Delivery
+2026-03-20,Amazon Electronics USB Hub,Amazon,-3499,Debit,Shopping
+2026-03-21,BPCL Highway Diesel Fuel,BPCL Fuel,-2800,Debit,Fuel
+2026-03-22,Amazon Item Return Reversal,Amazon Refund,1200,Credit,Refunds
+2026-03-24,Blinkit Morning Dairy,Blinkit,-1650,Debit,Groceries
+2026-03-25,Upwork Global Freelance Client,Upwork,18500,Credit,Freelance Income
+2026-03-26,Barbeque Nation Family Dinner,Barbeque Nation,-3200,Debit,Restaurants and Food Delivery
+2026-03-28,Zara Weekend Mall Shopping,Zara Apparels,-4500,Debit,Shopping
+2026-03-30,Bank Annual Card Maintenance Fee,Bank Fee,-590,Debit,Fees and Charges

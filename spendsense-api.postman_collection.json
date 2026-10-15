@@ -1,0 +1,333 @@
+{
+  "info": {
+    "_postman_id": "spendsense-api-v1",
+    "name": "SpendSense API Collection",
+    "description": "Comprehensive API collection for SpendSense — Personal Spending Behavior Analyzer.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "transaction_id", "value": "1" },
+    { "key": "budget_id", "value": "1" },
+    { "key": "upload_id", "value": "1" },
+    { "key": "recurring_id", "value": "1" },
+    { "key": "insight_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Get Application Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/health", "host": ["{{base_url}}"], "path": ["api", "health"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Uploads",
+      "item": [
+        {
+          "name": "Preview Upload Statement",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "data/sample_transactions.csv" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/uploads/preview", "host": ["{{base_url}}"], "path": ["api", "uploads", "preview"] }
+          }
+        },
+        {
+          "name": "Confirm Import",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"temp_file_token\": \"sample_token\",\n  \"column_mapping\": {\n    \"date_col\": \"Date\",\n    \"desc_col\": \"Description\",\n    \"merchant_col\": \"Merchant\",\n    \"amount_col\": \"Amount\"\n  },\n  \"skip_duplicates\": true,\n  \"default_currency\": \"INR\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/uploads/import", "host": ["{{base_url}}"], "path": ["api", "uploads", "import"] }
+          }
+        },
+        {
+          "name": "List Upload History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/uploads", "host": ["{{base_url}}"], "path": ["api", "uploads"] }
+          }
+        },
+        {
+          "name": "Delete Upload Batch",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/uploads/{{upload_id}}", "host": ["{{base_url}}"], "path": ["api", "uploads", "{{upload_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "List Transactions with Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/transactions?page=1&page_size=20&sort_by=transaction_date&sort_order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "transactions"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "page_size", "value": "20" },
+                { "key": "sort_by", "value": "transaction_date" },
+                { "key": "sort_order", "value": "desc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Transaction",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/transactions/{{transaction_id}}", "host": ["{{base_url}}"], "path": ["api", "transactions", "{{transaction_id}}"] }
+          }
+        },
+        {
+          "name": "Update Transaction & Category Rule",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Groceries\",\n  \"notes\": \"Family weekend provisions\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/transactions/{{transaction_id}}", "host": ["{{base_url}}"], "path": ["api", "transactions", "{{transaction_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Transaction",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/transactions/{{transaction_id}}", "host": ["{{base_url}}"], "path": ["api", "transactions", "{{transaction_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics & Intelligence",
+      "item": [
+        {
+          "name": "Summary KPIs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/analytics/summary", "host": ["{{base_url}}"], "path": ["api", "analytics", "summary"] }
+          }
+        },
+        {
+          "name": "Category Analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/analytics/categories", "host": ["{{base_url}}"], "path": ["api", "analytics", "categories"] }
+          }
+        },
+        {
+          "name": "Trends Over Time",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/analytics/trends?interval=monthly", "host": ["{{base_url}}"], "path": ["api", "analytics", "trends"], "query": [{ "key": "interval", "value": "monthly" }] }
+          }
+        },
+        {
+          "name": "Spending Behaviour & Anomalies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/analytics/behaviour", "host": ["{{base_url}}"], "path": ["api", "analytics", "behaviour"] }
+          }
+        },
+        {
+          "name": "Savings Opportunities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/analytics/savings", "host": ["{{base_url}}"], "path": ["api", "analytics", "savings"] }
+          }
+        },
+        {
+          "name": "List Recurring Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/recurring", "host": ["{{base_url}}"], "path": ["api", "recurring"] }
+          }
+        },
+        {
+          "name": "Update Recurring Item",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\",\n  \"is_subscription\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/recurring/{{recurring_id}}", "host": ["{{base_url}}"], "path": ["api", "recurring", "{{recurring_id}}"] }
+          }
+        },
+        {
+          "name": "List Insights",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/insights", "host": ["{{base_url}}"], "path": ["api", "insights"] }
+          }
+        },
+        {
+          "name": "Update Insight Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"reviewed\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/insights/{{insight_id}}", "host": ["{{base_url}}"], "path": ["api", "insights", "{{insight_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Budgets",
+      "item": [
+        {
+          "name": "List Budgets & Drift",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/budgets", "host": ["{{base_url}}"], "path": ["api", "budgets"] }
+          }
+        },
+        {
+          "name": "Create Budget",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Entertainment\",\n  \"budget_amount\": 5000,\n  \"period_type\": \"monthly\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/budgets", "host": ["{{base_url}}"], "path": ["api", "budgets"] }
+          }
+        },
+        {
+          "name": "Update Budget Amount",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"budget_amount\": 6500\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/budgets/{{budget_id}}", "host": ["{{base_url}}"], "path": ["api", "budgets", "{{budget_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Budget",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/budgets/{{budget_id}}", "host": ["{{base_url}}"], "path": ["api", "budgets", "{{budget_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports & Management",
+      "item": [
+        {
+          "name": "Get Monthly Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/reports/monthly", "host": ["{{base_url}}"], "path": ["api", "reports", "monthly"] }
+          }
+        },
+        {
+          "name": "Export CSV Statements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/reports/export", "host": ["{{base_url}}"], "path": ["api", "reports", "export"] }
+          }
+        },
+        {
+          "name": "Load Demo Dataset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/reports/demo-data", "host": ["{{base_url}}"], "path": ["api", "reports", "demo-data"] }
+          }
+        },
+        {
+          "name": "Reset All Data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/reports/reset-data", "host": ["{{base_url}}"], "path": ["api", "reports", "reset-data"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "Get Settings & Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/settings", "host": ["{{base_url}}"], "path": ["api", "settings"] }
+          }
+        },
+        {
+          "name": "Update User Settings",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"default_currency\": \"INR\",\n  \"anomaly_sensitivity\": \"medium\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/settings", "host": ["{{base_url}}"], "path": ["api", "settings"] }
+          }
+        },
+        {
+          "name": "Create Custom Category",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_name\": \"Crypto & Web3\",\n  \"category_type\": \"expense\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/settings/categories", "host": ["{{base_url}}"], "path": ["api", "settings", "categories"] }
+          }
+        }
+      ]
+    }
+  ]
+}

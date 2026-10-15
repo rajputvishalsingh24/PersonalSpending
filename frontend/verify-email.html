@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Email — SpendSense</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-[#F8FAFC] text-slate-900 min-h-screen flex flex-col antialiased selection:bg-purple-100 selection:text-purple-900 relative overflow-x-hidden">
+
+  <!-- Header Navigation -->
+  <header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
+          S
+        </div>
+        <span class="font-extrabold text-xl tracking-tight text-slate-900">SpendSense</span>
+      </a>
+
+      <div class="flex items-center space-x-3 text-sm">
+        <a href="login.html" class="font-bold text-purple-700 hover:text-purple-800 px-3.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors border border-purple-200/60">
+          Sign In
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ambient Moving Doodles -->
+  <div class="absolute top-28 left-12 opacity-70 pointer-events-none hidden md:block" data-doodle="sparkle"></div>
+  <div class="absolute bottom-20 right-20 opacity-70 pointer-events-none hidden md:block" data-doodle="coin"></div>
+
+  <!-- Main Container -->
+  <main class="flex-grow flex items-center justify-center px-4 py-12 relative z-10">
+    <div class="w-full max-w-md">
+      
+      <div class="tilt-card bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-emerald-500"></div>
+
+        <!-- State 1: Verifying Spinner -->
+        <div id="state-loading" class="text-center py-6">
+          <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto mb-4 border border-purple-100 shadow-inner">
+            <svg class="animate-spin w-8 h-8" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-slate-900 mb-2">Verifying Your Email</h1>
+          <p class="text-sm text-slate-500">Connecting with SpendSense to authenticate your account...</p>
+        </div>
+
+        <!-- State 2: Success -->
+        <div id="state-success" class="hidden text-center py-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-100 shadow-inner">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h1 class="text-2xl font-black text-slate-900 tracking-tight mb-2">Email Verified!</h1>
+          <p id="success-msg" class="text-sm text-slate-600 leading-relaxed mb-6">
+            Your email has been confirmed. You now have full access to all India-first financial analytics, category insights, and budget tracking.
+          </p>
+          <a href="dashboard.html" class="inline-flex items-center justify-center w-full py-3 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-md hover:shadow-lg space-x-2">
+            <span>Continue to Dashboard</span>
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+
+        <!-- State 3: Error / Resend Option -->
+        <div id="state-error" class="hidden py-4">
+          <div class="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4 border border-rose-100 shadow-inner">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-slate-900 text-center mb-2">Verification Failed</h1>
+          <p id="error-msg" class="text-sm text-slate-600 text-center mb-6">
+            This verification link is invalid or has expired. Request a new link below to verify your account.
+          </p>
+
+          <form id="form-resend" class="space-y-4 pt-2 border-t border-slate-100">
+            <div>
+              <label for="resend-email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email Address</label>
+              <input id="resend-email" type="email" required placeholder="you@example.com" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+            </div>
+
+            <button id="btn-resend" type="submit" class="w-full py-3 rounded-xl font-bold text-white bg-purple-700 hover:bg-purple-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+              <span>Send New Verification Link</span>
+            </button>
+          </form>
+
+          <div class="mt-5 text-center">
+            <a href="login.html" class="text-xs font-bold text-slate-500 hover:text-slate-800">
+              ← Return to Sign In
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const stateLoading = document.getElementById("state-loading");
+      const stateSuccess = document.getElementById("state-success");
+      const stateError = document.getElementById("state-error");
+      const errorMsg = document.getElementById("error-msg");
+      const resendEmailInput = document.getElementById("resend-email");
+      const formResend = document.getElementById("form-resend");
+      const btnResend = document.getElementById("btn-resend");
+
+      const params = new URLSearchParams(window.location.search);
+      const email = params.get("email");
+      const token = params.get("token");
+
+      if (email) {
+        resendEmailInput.value = email;
+      }
+
+      if (!email || !token) {
+        stateLoading.classList.add("hidden");
+        stateError.classList.remove("hidden");
+        errorMsg.innerText = "No verification link parameters were provided. Please enter your email to receive a new link.";
+        return;
+      }
+
+      try {
+        const res = await authAPI.verifyEmail(email, token);
+        stateLoading.classList.add("hidden");
+        stateSuccess.classList.remove("hidden");
+      } catch (err) {
+        stateLoading.classList.add("hidden");
+        stateError.classList.remove("hidden");
+        errorMsg.innerText = err.message || "This verification link is invalid or has expired.";
+      }
+
+      formResend.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const em = resendEmailInput.value.trim();
+        if (!em) return;
+
+        try {
+          btnResend.disabled = true;
+          btnResend.innerText = "Sending Link...";
+          const res = await authAPI.resendVerification(em);
+          showToast(res.message, "success");
+          btnResend.innerText = "Link Sent!";
+          setTimeout(() => {
+            btnResend.disabled = false;
+            btnResend.innerText = "Send New Verification Link";
+          }, 4000);
+        } catch (err) {
+          showToast(err.message || "Failed to resend link.", "error");
+          btnResend.disabled = false;
+          btnResend.innerText = "Send New Verification Link";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

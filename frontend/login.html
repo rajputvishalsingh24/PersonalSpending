@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — SpendSense</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-[#F8FAFC] text-slate-900 min-h-screen flex flex-col antialiased selection:bg-purple-100 selection:text-purple-900 relative overflow-x-hidden">
+
+  <!-- Header Navigation -->
+  <header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
+          S
+        </div>
+        <span class="font-extrabold text-xl tracking-tight text-slate-900">SpendSense</span>
+      </a>
+
+      <div class="flex items-center space-x-3 text-sm">
+        <span class="text-slate-500 hidden sm:inline">Don't have an account?</span>
+        <a href="register.html" class="font-bold text-purple-700 hover:text-purple-800 px-3.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors border border-purple-200/60">
+          Create Account
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ambient Moving Doodles -->
+  <div class="absolute top-24 left-10 opacity-70 pointer-events-none hidden md:block" data-doodle="coin"></div>
+  <div class="absolute top-36 right-16 opacity-70 pointer-events-none hidden md:block" data-doodle="sparkle"></div>
+  <div class="absolute bottom-16 left-24 opacity-70 pointer-events-none hidden md:block" data-doodle="wallet"></div>
+  <div class="absolute bottom-24 right-20 opacity-70 pointer-events-none hidden md:block" data-doodle="piggy"></div>
+
+  <!-- Main Login Card Container -->
+  <main class="flex-grow flex items-center justify-center px-4 py-12 relative z-10">
+    <div class="w-full max-w-md">
+      
+      <!-- Card with 3D Tilt Effect -->
+      <div class="tilt-card bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl relative overflow-hidden">
+        
+        <!-- Subtle Top Gradient Accent -->
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-emerald-500"></div>
+
+        <!-- Title & Subtitle -->
+        <div class="text-center mb-7">
+          <h1 class="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h1>
+          <p class="text-sm text-slate-500 mt-1">Sign in to your private financial intelligence workspace</p>
+        </div>
+
+        <!-- Alert Notification Box -->
+        <div id="auth-alert" class="hidden mb-5 p-3.5 rounded-xl text-sm border flex items-start space-x-3">
+          <span id="auth-alert-icon" class="font-bold flex-shrink-0 mt-0.5"></span>
+          <span id="auth-alert-message" class="flex-grow font-medium"></span>
+        </div>
+
+        <!-- Auth Method Tabs -->
+        <div class="flex p-1 bg-slate-100 rounded-2xl mb-6 border border-slate-200/60">
+          <button id="tab-btn-phone" type="button" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm bg-white text-slate-900">
+            📱 Mobile Number (OTP)
+          </button>
+          <button id="tab-btn-email" type="button" class="flex-1 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 hover:text-slate-900 transition-all">
+            ✉️ Email & Password
+          </button>
+        </div>
+
+        <!-- Option A: Phone & SMS OTP Form (Primary for India) -->
+        <form id="form-login-phone" class="space-y-4">
+          <!-- Step 1: Input Phone Number -->
+          <div id="phone-step-number" class="space-y-4">
+            <div>
+              <label for="login-phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mobile Number</label>
+              <div class="flex space-x-2">
+                <select id="login-country-code" class="w-28 py-2.5 px-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white">
+                  <option value="+91" selected>🇮🇳 +91</option>
+                  <option value="+1">🇺🇸 +1</option>
+                  <option value="+44">🇬🇧 +44</option>
+                  <option value="+971">🇦🇪 +971</option>
+                  <option value="+65">🇸🇬 +65</option>
+                  <option value="+61">🇦🇺 +61</option>
+                  <option value="+49">🇩🇪 +49</option>
+                  <option value="+33">🇫🇷 +33</option>
+                </select>
+                <input id="login-phone" type="tel" maxlength="10" placeholder="98765 43210" class="flex-grow px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Enter your registered 10-digit mobile number</p>
+            </div>
+
+            <button id="btn-send-otp" type="button" class="w-full py-3 rounded-xl font-bold text-white bg-purple-700 hover:bg-purple-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+              <span>Send Verification Code</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+          </div>
+
+          <!-- Step 2: Input 6-Digit OTP -->
+          <div id="phone-step-otp" class="space-y-4 hidden">
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span>Code sent to <b id="display-target-phone" class="text-slate-800 font-bold"></b></span>
+              <button type="button" id="btn-edit-phone" class="text-purple-700 hover:underline font-semibold">Edit</button>
+            </div>
+
+            <!-- 6 Numeric OTP Input Boxes -->
+            <div class="flex justify-between space-x-2" id="otp-input-group">
+              <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+              <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+              <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+              <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+              <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+              <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+            </div>
+
+            <div class="flex items-center justify-between text-xs pt-1">
+              <span id="otp-timer-display" class="text-slate-400">Resend in <span id="otp-countdown">60</span>s</span>
+              <button id="btn-resend-otp" type="button" disabled class="font-bold text-purple-700 disabled:text-slate-400 disabled:cursor-not-allowed hover:underline">
+                Resend Code
+              </button>
+            </div>
+
+            <button id="btn-verify-otp" type="submit" class="w-full py-3 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+              <span>Sign In with OTP</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Option B: Email Login Form -->
+        <form id="form-login-email" class="space-y-4 hidden">
+          <div>
+            <label for="login-email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email Address</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206"/></svg>
+              </span>
+              <input id="login-email" type="email" required autocomplete="email" placeholder="you@example.com" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="login-password" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+              <a href="forgot-password.html" class="text-xs font-semibold text-purple-700 hover:text-purple-800 transition-colors">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              </span>
+              <input id="login-password" type="password" required autocomplete="current-password" placeholder="••••••••" class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
+              <button type="button" id="btn-toggle-password" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input id="login-remember-me" type="checkbox" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-slate-300">
+              <span class="text-xs font-medium text-slate-600">Remember me for 30 days</span>
+            </label>
+          </div>
+
+          <button id="btn-submit-email" type="submit" class="w-full py-3 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+            <span>Log In with Password</span>
+          </button>
+        </form>
+
+        <!-- Development Mode Notice -->
+        <div class="mt-6 pt-5 border-t border-slate-100 text-center">
+          <p class="text-xs text-slate-400 flex items-center justify-center space-x-1">
+            <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            <span>256-bit PBKDF2 encryption & HttpOnly session protection</span>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Quick Demo Login Helper -->
+      <div class="mt-5 text-center">
+        <button id="btn-fill-demo" class="text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+          ⚡ Quick Demo: Use local test account
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

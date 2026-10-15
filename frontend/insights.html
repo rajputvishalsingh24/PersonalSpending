@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendSense — Insights & Savings Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-[#FBFBFD] text-slate-900 min-h-screen flex antialiased">
+
+  <!-- Mobile Drawer Backdrop -->
+  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-slate-900/40 z-30 hidden lg:hidden"></div>
+
+  <!-- Persistent Desktop Sidebar -->
+  <aside id="sidebar-navigation" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200/90 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col justify-between p-5">
+    <div class="space-y-6">
+      <a href="index.html" class="flex items-center space-x-3 px-2">
+        <div class="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-lg shadow-sm">S</div>
+        <div>
+          <span class="font-extrabold text-lg tracking-tight text-slate-900">SpendSense</span>
+          <p class="text-[11px] text-slate-500 font-medium -mt-1">Financial Intelligence</p>
+        </div>
+      </a>
+
+      <nav class="space-y-1">
+        <a href="dashboard.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="upload.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          <span>Upload Statement</span>
+        </a>
+        <a href="transactions.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span>Transactions</span>
+        </a>
+        <a href="budgets.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Budgets & Drift</span>
+        </a>
+        <a href="recurring.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Recurring Bills</span>
+        </a>
+        <a href="insights.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span>Insights & Savings</span>
+        </a>
+        <a href="settings.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span>Settings</span>
+        </a>
+        <a href="profile.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <span>Account & Profile</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="pt-4 border-t border-slate-100 space-y-2">
+      <button id="btn-sidebar-logout" class="w-full py-2 px-3 text-xs font-bold rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200/50 transition flex items-center justify-center space-x-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <span>Sign Out</span>
+      </button>
+      <div class="flex items-center space-x-2 text-[11px] text-slate-400 px-1 pt-1">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Local Offline SQLite</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+    
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Intelligence & Savings Opportunities</h1>
+          <p class="text-xs text-slate-500">Data-backed explanations, habit discoveries, and realistic monthly savings scenarios.</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <div id="header-user-menu-container"></div>
+      </div>
+    </header>
+
+    <main class="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-10">
+
+      <!-- Section 1: Realistic Savings Opportunities Scenarios -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900">Realistic Savings Scenarios</h2>
+            <p class="text-xs text-slate-500">Illustrative scenarios derived from your actual discretionary spending baselines.</p>
+          </div>
+          <span class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+            Scenario Based • No Guaranteed Promises
+          </span>
+        </div>
+
+        <div id="savings-opportunities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 perspective-container">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Section 2: Behavioral Financial Insights Feed -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900">Behavioral Insights Engine</h2>
+            <p class="text-xs text-slate-500">Deterministic explanations explaining what changed, why it matters, and next steps.</p>
+          </div>
+
+          <!-- Filter tags -->
+          <div class="flex items-center space-x-1.5 text-xs font-semibold bg-white p-1 rounded-xl border border-slate-200">
+            <button onclick="filterInsights('all')" class="ins-filter px-3 py-1.5 rounded-lg bg-slate-900 text-white" data-filter="all">All</button>
+            <button onclick="filterInsights('high')" class="ins-filter px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100" data-filter="high">High Priority</button>
+            <button onclick="filterInsights('positive')" class="ins-filter px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100" data-filter="positive">Positive</button>
+          </div>
+        </div>
+
+        <div id="insights-list" class="space-y-4">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/insights.js"></script>
+</body>
+</html>

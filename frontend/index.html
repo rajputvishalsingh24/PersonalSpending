@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendSense — Personal Spending Behavior Analyzer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-[#FBFBFD] text-slate-900 min-h-screen flex flex-col antialiased selection:bg-purple-100 selection:text-purple-900">
+
+  <!-- Navigation Bar -->
+  <header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-xl shadow-md">
+          S
+        </div>
+        <div>
+          <span class="font-extrabold text-xl tracking-tight text-slate-900">SpendSense</span>
+          <span class="text-xs px-2 py-0.5 ml-1.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">Local & Private</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+        <a href="dashboard.html" class="hover:text-slate-900 transition-colors">Overview</a>
+        <a href="transactions.html" class="hover:text-slate-900 transition-colors">Transactions</a>
+        <a href="budgets.html" class="hover:text-slate-900 transition-colors">Budgets</a>
+        <a href="recurring.html" class="hover:text-slate-900 transition-colors">Recurring</a>
+        <a href="insights.html" class="hover:text-slate-900 transition-colors">Insights</a>
+      </nav>
+
+      <div id="landing-auth-nav" class="flex items-center space-x-3">
+        <a href="login.html" class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors">
+          Log In
+        </a>
+        <a href="register.html" class="px-4 py-2 text-sm font-bold rounded-xl text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-sm hover:shadow">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-grow flex items-center justify-center relative overflow-hidden py-16 lg:py-24">
+    <!-- Ambient Moving Doodles in Background -->
+    <div class="absolute top-12 left-16" data-doodle="coin"></div>
+    <div class="absolute top-28 right-24" data-doodle="sparkle"></div>
+    <div class="absolute bottom-20 left-20" data-doodle="piggy"></div>
+    <div class="absolute bottom-16 right-32" data-doodle="receipt"></div>
+
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+      
+      <!-- Left Hero Text Content -->
+      <div class="lg:col-span-6 space-y-6">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-700 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span>
+          <span>Zero Cloud Tracking • 100% Offline SQLite</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+          Your money has a story.<br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-indigo-700 to-emerald-600">
+            SpendSense helps you see it.
+          </span>
+        </h1>
+
+        <p class="text-lg text-slate-600 max-w-xl leading-relaxed">
+          Most expense trackers merely display numbers. SpendSense uncovers where your money goes, flags surprise subscription spikes, tracks budget drift, and delivers realistic, actionable saving opportunities.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 pt-2">
+          <a href="register.html" id="hero-cta-primary" class="px-6 py-3.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center space-x-2">
+            <span>Get Started</span>
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+          <a href="login.html" id="hero-cta-secondary" class="px-6 py-3.5 rounded-xl font-bold text-slate-800 bg-white hover:bg-slate-50 transition-all border border-slate-200 shadow-sm hover:shadow">
+            Sign In
+          </a>
+          <button id="btn-load-demo-data" class="px-5 py-3.5 rounded-xl font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 transition-all border border-purple-200 text-sm flex items-center space-x-1.5 shadow-sm">
+            <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
+            <span>Explore Demo Data</span>
+          </button>
+        </div>
+
+        <!-- Privacy Assurance -->
+        <div class="flex items-center space-x-6 pt-4 text-xs font-medium text-slate-500">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 text-emerald-600 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            No bank logins or credentials required
+          </span>
+          <span class="flex items-center">
+            <svg class="w-4 h-4 text-emerald-600 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            Supports CSV & XLSX Statements
+          </span>
+        </div>
+      </div>
+
+      <!-- Right 3D Layered Dashboard Visual -->
+      <div class="lg:col-span-6 flex justify-center perspective-container">
+        <div class="relative w-full max-w-lg">
+          <!-- Background glow halo -->
+          <div class="absolute -inset-4 bg-gradient-to-r from-purple-200 to-emerald-100 rounded-3xl filter blur-2xl opacity-60"></div>
+
+          <!-- Main 3D Elevated Card -->
+          <div class="relative tilt-card bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl space-y-5">
+            
+            <!-- Top bar -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-rose-400"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">Sample Financial Analysis</span>
+            </div>
+
+            <!-- Mini KPI row -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100">
+                <span class="text-xs font-medium text-emerald-800">Net Cash Flow</span>
+                <p class="text-2xl font-extrabold text-emerald-900 mt-1">₹94,819</p>
+                <span class="text-[11px] text-emerald-700 font-semibold">41.3% Savings Rate</span>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                <span class="text-xs font-medium text-slate-500">Recurring Bills</span>
+                <p class="text-2xl font-extrabold text-slate-900 mt-1">₹3,617<span class="text-xs text-slate-400 font-normal">/mo</span></p>
+                <span class="text-[11px] text-purple-700 font-semibold">4 Patterns Verified</span>
+              </div>
+            </div>
+
+            <!-- Floating Insight Card with 3D Depth -->
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-purple-900 to-indigo-950 text-white shadow-xl card-inner-elevate transform -rotate-1 hover:rotate-0 transition-transform">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-purple-300">Behavioral Insight</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-200 font-semibold">High Priority</span>
+              </div>
+              <h4 class="font-bold text-sm text-purple-50">Surge in Dining & Food Delivery</h4>
+              <p class="text-xs text-purple-200 mt-1 leading-relaxed">
+                Your restaurant and food delivery spend increased by 28% this month (+₹2,450). Reviewing 6 additional takeaway orders could yield ~₹1,800 in monthly savings.
+              </p>
+            </div>
+
+            <!-- Mini progress -->
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+              <div class="flex justify-between text-xs font-semibold">
+                <span class="text-slate-700">Monthly Budget Adherence</span>
+                <span class="text-emerald-700">72% Utilized (On Track)</span>
+              </div>
+              <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div class="bg-emerald-600 h-2.5 rounded-full" style="width: 72%"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Feature Highlights -->
+  <section class="border-t border-slate-200/80 bg-white py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl font-extrabold text-slate-900">Built to explain, not just calculate</h2>
+        <p class="text-slate-600 text-sm mt-2">SpendSense pairs statistical rigor with natural language explanations so you always know what to do next.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">1</div>
+          <h3 class="font-bold text-lg text-slate-900">Recurring & Subscriptions</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">Automatically detects repeating interval bills (weekly, monthly, annual) and projects annual commitments with confidence scoring.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">2</div>
+          <h3 class="font-bold text-lg text-slate-900">Budget Drift Monitoring</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">Tracks daily spending pace against elapsed calendar days to alert you before your budget overflows, not after.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">3</div>
+          <h3 class="font-bold text-lg text-slate-900">Realistic Savings Scenarios</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">Identifies genuine opportunities grounded in your actual transactions—no fabricated figures or unrealistic promises.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-[#FBFBFD] py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 SpendSense — Personal Spending Behavior Analyzer. Built with FastAPI & SQLite.</p>
+      <div class="flex items-center space-x-6">
+        <a href="settings.html" class="hover:text-slate-800 transition-colors">Privacy & Settings</a>
+        <a href="/docs" target="_blank" class="hover:text-slate-800 transition-colors">Interactive API Docs</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

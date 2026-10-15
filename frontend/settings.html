@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendSense — Settings & Privacy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-[#FBFBFD] text-slate-900 min-h-screen flex antialiased">
+
+  <!-- Mobile Drawer Backdrop -->
+  <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-slate-900/40 z-30 hidden lg:hidden"></div>
+
+  <!-- Persistent Desktop Sidebar -->
+  <aside id="sidebar-navigation" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200/90 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col justify-between p-5">
+    <div class="space-y-6">
+      <a href="index.html" class="flex items-center space-x-3 px-2">
+        <div class="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-lg shadow-sm">S</div>
+        <div>
+          <span class="font-extrabold text-lg tracking-tight text-slate-900">SpendSense</span>
+          <p class="text-[11px] text-slate-500 font-medium -mt-1">Financial Intelligence</p>
+        </div>
+      </a>
+
+      <nav class="space-y-1">
+        <a href="dashboard.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="upload.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          <span>Upload Statement</span>
+        </a>
+        <a href="transactions.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span>Transactions</span>
+        </a>
+        <a href="budgets.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Budgets & Drift</span>
+        </a>
+        <a href="recurring.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Recurring Bills</span>
+        </a>
+        <a href="insights.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span>Insights & Savings</span>
+        </a>
+        <a href="settings.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span>Settings</span>
+        </a>
+        <a href="profile.html" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <span>Account & Profile</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="pt-4 border-t border-slate-100 space-y-2">
+      <button id="btn-sidebar-logout" class="w-full py-2 px-3 text-xs font-bold rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200/50 transition flex items-center justify-center space-x-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <span>Sign Out</span>
+      </button>
+      <div class="flex items-center space-x-2 text-[11px] text-slate-400 px-1 pt-1">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Local Offline SQLite</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+    
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Application Settings & Data Control</h1>
+          <p class="text-xs text-slate-500">Manage local currency defaults, spending categories, and SQLite database storage.</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <div id="header-user-menu-container"></div>
+      </div>
+    </header>
+
+    <main class="flex-1 p-6 lg:p-8 max-w-4xl mx-auto w-full space-y-8">
+
+      <!-- General Preferences Card -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <h3 class="font-extrabold text-slate-900 text-lg">General Preferences</h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Default Display Currency</label>
+            <select id="setting-currency" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium">
+              <option value="INR">INR (₹ - Indian Rupee)</option>
+              <option value="USD">USD ($ - US Dollar)</option>
+              <option value="EUR">EUR (€ - Euro)</option>
+              <option value="GBP">GBP (£ - British Pound)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Anomaly Sensitivity Threshold</label>
+            <select id="setting-anomaly" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-medium">
+              <option value="low">Low (Only major spikes > 3.5x MAD)</option>
+              <option value="medium">Medium (Standard ~ 2.5x MAD)</option>
+              <option value="high">High (Strict monitoring ~ 1.8x MAD)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="btn-save-settings" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition shadow">
+          Save Preferences
+        </button>
+      </div>
+
+      <!-- Category Management Card -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-extrabold text-slate-900 text-lg">Categories Ledger</h3>
+            <p class="text-xs text-slate-500">Default and custom categories used for automated tagging.</p>
+          </div>
+        </div>
+
+        <!-- Add Category Form -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+          <span class="text-xs font-bold text-slate-800">Add New Category</span>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <input type="text" id="new-cat-name" placeholder="Category name..." class="bg-white border border-slate-300 rounded-xl p-2 font-medium">
+            <select id="new-cat-type" class="bg-white border border-slate-300 rounded-xl p-2 font-medium">
+              <option value="expense">Expense Category</option>
+              <option value="income">Income Category</option>
+            </select>
+            <button id="btn-add-category" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition">
+              + Add Category
+            </button>
+          </div>
+        </div>
+
+        <!-- Categories tags -->
+        <div id="categories-tags-container" class="flex flex-wrap gap-2 pt-2">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Local Data Management & Privacy Information -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">🔒</div>
+          <div>
+            <h3 class="font-extrabold text-slate-900 text-lg">Local Privacy & Data Storage</h3>
+            <p class="text-xs text-slate-500">SpendSense stores 100% of your financial information in a local SQLite file.</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Your transactions are never uploaded to third-party AI models or external analytics servers. The database is located at <code class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-800 font-mono">backend/data/spendsense.db</code>.
+        </p>
+
+        <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap gap-2">
+            <button id="btn-export-all-csv" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition">
+              📥 Export Transactions (CSV)
+            </button>
+            <button id="btn-export-all-json" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition">
+              📦 Export Full Data (JSON)
+            </button>
+          </div>
+
+          <button id="btn-reset-all-data" class="px-4 py-2 rounded-xl text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition">
+            Delete All Imported Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Database Backups & Disaster Recovery Card -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold">💾</div>
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-lg">Database Backups & Disaster Recovery</h3>
+              <p class="text-xs text-slate-500">Perform online atomic backups of your SQLite database with integrity verification.</p>
+            </div>
+          </div>
+          <button id="btn-create-backup" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-purple-700 hover:bg-purple-800 transition shadow">
+            + Create Instant Backup
+          </button>
+        </div>
+
+        <div id="backups-list-container" class="space-y-2 pt-2">
+          <!-- Dynamically populated -->
+          <div class="text-xs text-slate-400 py-3 text-center">Loading database backups...</div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>
