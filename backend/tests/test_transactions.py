@@ -1,9 +1,9 @@
 import pytest
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 from backend.database import init_db, get_db
 
-client = TestClient(app)
+client = TestClient(_app)
 
 @pytest.fixture(autouse=True)
 def setup_test_transaction():
