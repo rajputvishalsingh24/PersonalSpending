@@ -43,24 +43,32 @@
 
   <!-- Hero Section -->
   <main class="flex-grow flex items-center justify-center relative overflow-hidden py-16 lg:py-24">
+    <!-- Ambient Aurora Glow Background -->
+    <div class="aurora-container">
+      <div class="aurora-blob aurora-1"></div>
+      <div class="aurora-blob aurora-2"></div>
+      <div class="aurora-blob aurora-3"></div>
+    </div>
+
     <!-- Ambient Moving Doodles in Background -->
-    <div class="absolute top-12 left-16" data-doodle="coin"></div>
-    <div class="absolute top-28 right-24" data-doodle="sparkle"></div>
-    <div class="absolute bottom-20 left-20" data-doodle="piggy"></div>
-    <div class="absolute bottom-16 right-32" data-doodle="receipt"></div>
+    <div class="absolute top-10 left-12" data-doodle="rupee"></div>
+    <div class="absolute top-24 right-20" data-doodle="trending"></div>
+    <div class="absolute bottom-16 left-16" data-doodle="shield"></div>
+    <div class="absolute top-1/2 -left-6" data-doodle="coin"></div>
+    <div class="absolute bottom-12 right-28" data-doodle="receipt"></div>
 
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
       
       <!-- Left Hero Text Content -->
       <div class="lg:col-span-6 space-y-6">
-        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-700 text-xs font-semibold">
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-purple-50/90 border border-purple-200/80 text-purple-700 text-xs font-semibold shadow-xs">
           <span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span>
           <span>Zero Cloud Tracking • 100% Offline SQLite</span>
         </div>
 
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
           Your money has a story.<br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-indigo-700 to-emerald-600">
+          <span class="gradient-text-animated">
             SpendSense helps you see it.
           </span>
         </h1>
@@ -70,14 +78,14 @@
         </p>
 
         <div class="flex flex-wrap items-center gap-4 pt-2">
-          <a href="register.html" id="hero-cta-primary" class="px-6 py-3.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center space-x-2">
+          <a href="register.html" id="hero-cta-primary" class="btn-interactive px-6 py-3.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 shadow-lg hover:shadow-xl flex items-center space-x-2">
             <span>Get Started</span>
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </a>
-          <a href="login.html" id="hero-cta-secondary" class="px-6 py-3.5 rounded-xl font-bold text-slate-800 bg-white hover:bg-slate-50 transition-all border border-slate-200 shadow-sm hover:shadow">
+          <a href="login.html" id="hero-cta-secondary" class="btn-interactive px-6 py-3.5 rounded-xl font-bold text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:shadow">
             Sign In
           </a>
-          <button id="btn-load-demo-data" class="px-5 py-3.5 rounded-xl font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 transition-all border border-purple-200 text-sm flex items-center space-x-1.5 shadow-sm">
+          <button id="btn-load-demo-data" class="btn-interactive px-5 py-3.5 rounded-xl font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-sm flex items-center space-x-1.5 shadow-sm">
             <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
             <span>Explore Demo Data</span>
           </button>
@@ -115,16 +123,16 @@
               <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">Sample Financial Analysis</span>
             </div>
 
-            <!-- Mini KPI row -->
+            <!-- Mini KPI row with Animated Counters -->
             <div class="grid grid-cols-2 gap-4">
               <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100">
                 <span class="text-xs font-medium text-emerald-800">Net Cash Flow</span>
-                <p class="text-2xl font-extrabold text-emerald-900 mt-1">₹94,819</p>
+                <p class="text-2xl font-extrabold text-emerald-900 mt-1" data-counter="94819" data-prefix="₹">₹94,819</p>
                 <span class="text-[11px] text-emerald-700 font-semibold">41.3% Savings Rate</span>
               </div>
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
                 <span class="text-xs font-medium text-slate-500">Recurring Bills</span>
-                <p class="text-2xl font-extrabold text-slate-900 mt-1">₹3,617<span class="text-xs text-slate-400 font-normal">/mo</span></p>
+                <p class="text-2xl font-extrabold text-slate-900 mt-1" data-counter="3617" data-prefix="₹">₹3,617<span class="text-xs text-slate-400 font-normal">/mo</span></p>
                 <span class="text-[11px] text-purple-700 font-semibold">4 Patterns Verified</span>
               </div>
             </div>
@@ -141,14 +149,14 @@
               </p>
             </div>
 
-            <!-- Mini progress -->
+            <!-- Mini progress with Shimmer -->
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
               <div class="flex justify-between text-xs font-semibold">
                 <span class="text-slate-700">Monthly Budget Adherence</span>
                 <span class="text-emerald-700">72% Utilized (On Track)</span>
               </div>
               <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                <div class="bg-emerald-600 h-2.5 rounded-full" style="width: 72%"></div>
+                <div class="bg-emerald-600 h-2.5 rounded-full progress-bar-fill" style="width: 72%"></div>
               </div>
             </div>
 
@@ -159,28 +167,28 @@
     </div>
   </main>
 
-  <!-- Feature Highlights -->
+  <!-- Feature Highlights with Scroll Entrance Reveals -->
   <section class="border-t border-slate-200/80 bg-white py-16">
     <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center max-w-2xl mx-auto mb-12">
+      <div class="text-center max-w-2xl mx-auto mb-12 reveal-init">
         <h2 class="text-3xl font-extrabold text-slate-900">Built to explain, not just calculate</h2>
         <p class="text-slate-600 text-sm mt-2">SpendSense pairs statistical rigor with natural language explanations so you always know what to do next.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3">
+        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3 reveal-init reveal-delay-1">
           <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">1</div>
           <h3 class="font-bold text-lg text-slate-900">Recurring & Subscriptions</h3>
           <p class="text-sm text-slate-600 leading-relaxed">Automatically detects repeating interval bills (weekly, monthly, annual) and projects annual commitments with confidence scoring.</p>
         </div>
 
-        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3">
+        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3 reveal-init reveal-delay-2">
           <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">2</div>
           <h3 class="font-bold text-lg text-slate-900">Budget Drift Monitoring</h3>
           <p class="text-sm text-slate-600 leading-relaxed">Tracks daily spending pace against elapsed calendar days to alert you before your budget overflows, not after.</p>
         </div>
 
-        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3">
+        <div class="p-6 rounded-2xl bg-[#FBFBFD] border border-slate-200 tilt-card space-y-3 reveal-init reveal-delay-3">
           <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">3</div>
           <h3 class="font-bold text-lg text-slate-900">Realistic Savings Scenarios</h3>
           <p class="text-sm text-slate-600 leading-relaxed">Identifies genuine opportunities grounded in your actual transactions—no fabricated figures or unrealistic promises.</p>

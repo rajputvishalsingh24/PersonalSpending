@@ -10,6 +10,21 @@ const DOODLES = {
       <path d="M22 16H27M24 16V32M21 32H27" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
     </svg>
   `,
+  rupee: `
+    <div class="doodle-coin-3d w-14 h-14 rounded-full bg-gradient-to-tr from-amber-400 via-amber-300 to-amber-500 shadow-xl border-2 border-amber-200/90 flex items-center justify-center text-amber-950 font-black text-2xl select-none">
+      ₹
+    </div>
+  `,
+  trending: `
+    <div class="float-levitate w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 shadow-lg flex items-center justify-center text-white">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    </div>
+  `,
+  shield: `
+    <div class="float-levitate w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-lg flex items-center justify-center text-white glow-pulse">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+    </div>
+  `,
   receipt: `
     <svg class="w-12 h-12 text-slate-500 doodle-bob" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M14 8H34V40L30 37L26 40L24 37L20 40L16 37L14 40V8Z" stroke="currentColor" stroke-width="2" fill="#F8FAFC"/>
@@ -54,6 +69,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 2. Initialize 3D Perspective Tilt on metric cards
   initTiltCards();
+
+  // 3. Initialize scroll entrance reveals
+  initScrollReveals();
+
+  // 4. Auto-initialize animated number counters
+  document.querySelectorAll("[data-counter]").forEach(el => {
+    const val = parseFloat(el.getAttribute("data-counter")) || 0;
+    const prefix = el.getAttribute("data-prefix") ?? "₹";
+    const suffix = el.getAttribute("data-suffix") ?? "";
+    animateCounter(el, val, 950, prefix, suffix);
+  });
 
   // 3. Highlight active page in sidebar
   const currentPath = window.location.pathname.split("/").pop() || "index.html";
@@ -110,8 +136,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const res = await api.post("/api/reports/demo-data");
+        triggerConfetti();
         showToast(res.message || "Demonstration dataset loaded!", "success");
-        setTimeout(() => window.location.href = "dashboard.html", 500);
+        setTimeout(() => window.location.href = "dashboard.html", 600);
       } catch (err) {
         showToast(err.message || "Failed to load demo data", "error");
         loadDemoBtn.disabled = false;
@@ -298,3 +325,28 @@ function renderHeaderUserDropdown(user) {
     });
   }
 }
+
+/**
+ * Initializes IntersectionObserver for scroll-triggered entrance reveals
+ */
+function initScrollReveals() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.querySelectorAll(".reveal-init").forEach(el => el.classList.add("revealed"));
+    return;
+  }
+
+  const reveals = document.querySelectorAll(".reveal-init");
+  if (!reveals.length) return;
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("revealed");
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+}
+

@@ -59,13 +59,13 @@ function renderBudgets(budgets) {
     statusPill.innerText = overallBudget.status;
     if (overallBudget.status === "Over Budget") {
       statusPill.className = "px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200";
-      bar.className = "h-3 rounded-full bg-rose-600";
+      bar.className = "h-3 rounded-full bg-rose-600 progress-bar-fill";
     } else if (overallBudget.status === "Approaching Limit") {
       statusPill.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200";
-      bar.className = "h-3 rounded-full bg-amber-500";
+      bar.className = "h-3 rounded-full bg-amber-500 progress-bar-fill";
     } else {
       statusPill.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200";
-      bar.className = "h-3 rounded-full bg-emerald-600";
+      bar.className = "h-3 rounded-full bg-emerald-600 progress-bar-fill";
     }
 
     const totalDays = overallBudget.days_elapsed + overallBudget.days_remaining;
@@ -126,9 +126,9 @@ function renderBudgets(budgets) {
             <span class="text-xs text-slate-400 font-medium">of ${formatCurrency(b.budget_amount)}</span>
           </div>
 
-          <!-- Progress Bar -->
+          <!-- Progress Bar with Shimmer Animation -->
           <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2">
-            <div class="${barColor} h-2 rounded-full transition-all duration-300" style="width: ${clamped}%"></div>
+            <div class="${barColor} h-2 rounded-full progress-bar-fill transition-all duration-500" style="width: ${clamped}%"></div>
           </div>
 
           <div class="flex justify-between text-[11px] font-semibold text-slate-500 mt-1.5">
@@ -203,6 +203,7 @@ async function saveBudget() {
         budget_amount: amount,
         period_type: "monthly"
       });
+      triggerConfetti();
       showToast("New budget created.", "success");
     }
     closeBudgetModal();

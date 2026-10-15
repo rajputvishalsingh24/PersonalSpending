@@ -53,14 +53,17 @@ async function loadDashboardData() {
     const currencyLabel = document.getElementById("label-currency");
     if (currencyLabel) currencyLabel.innerText = `${summary.currency} (${summary.currency === "INR" ? "₹" : "$"})`;
 
-    // Render 6 KPI Cards
-    document.getElementById("kpi-income").innerText = formatCurrency(summary.total_income, summary.currency);
-    document.getElementById("kpi-expenses").innerText = formatCurrency(summary.total_expenses, summary.currency);
+    // Render 6 KPI Cards with Smooth Eased Count-Up
+    const currSymbol = summary.currency === "INR" ? "₹" : "$";
+    animateCounter(document.getElementById("kpi-income"), summary.total_income, 800, currSymbol);
+    animateCounter(document.getElementById("kpi-expenses"), summary.total_expenses, 800, currSymbol);
 
     const cashflowEl = document.getElementById("kpi-cashflow");
-    cashflowEl.innerText = formatCurrency(summary.net_cash_flow, summary.currency);
+    const isPositiveCF = summary.net_cash_flow >= 0;
+    animateCounter(cashflowEl, Math.abs(summary.net_cash_flow), 800, isPositiveCF ? currSymbol : `-${currSymbol}`);
+    
     const cfBadge = document.getElementById("kpi-cashflow-badge");
-    if (summary.net_cash_flow >= 0) {
+    if (isPositiveCF) {
       cashflowEl.className = "text-3xl font-extrabold text-emerald-600 tracking-tight";
       cfBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700";
       cfBadge.innerText = "Net Surplus";
@@ -92,7 +95,7 @@ async function loadDashboardData() {
       momLabelEl.innerText = summary.mom_spending_change_label;
     }
 
-    document.getElementById("kpi-recurring").innerText = formatCurrency(summary.active_recurring_expenses, summary.currency);
+    animateCounter(document.getElementById("kpi-recurring"), summary.active_recurring_expenses, 800, currSymbol);
     document.getElementById("kpi-recurring-count").innerText = `${summary.active_recurring_count} verified`;
 
     // 2. Fetch and render Categories Donut Chart
@@ -148,6 +151,12 @@ function renderCategoryChart(categories, currency) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        animateScale: true,
+        animateRotate: true,
+        duration: 1100,
+        easing: 'easeOutQuart'
+      },
       plugins: {
         legend: { display: false }
       },
@@ -205,6 +214,10 @@ function renderTrendChart(trends, currency) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 950,
+        easing: 'easeOutQuart'
+      },
       plugins: {
         legend: { display: false }
       },

@@ -89,10 +89,15 @@
       </div>
     </header>
 
-    <main class="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+    <main class="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8 relative">
+      <!-- Ambient Aurora Glow Background -->
+      <div class="aurora-container opacity-30">
+        <div class="aurora-blob aurora-1"></div>
+        <div class="aurora-blob aurora-2"></div>
+      </div>
 
       <!-- Summary KPI Row with 3D Tilt -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 perspective-container">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 perspective-container reveal-init">
         <div class="tilt-card bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
           <span class="text-xs font-semibold text-slate-500">Total Monthly Recurring</span>
           <p id="rec-kpi-monthly" class="text-3xl font-extrabold text-slate-900">₹0</p>

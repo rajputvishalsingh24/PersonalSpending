@@ -285,10 +285,11 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.setItem("spendsense_token", token);
       localStorage.setItem("spendsense_token", token);
 
+      triggerConfetti();
       showToast(res.message || "Phone verified successfully!", "success");
       const redirect = sessionStorage.getItem("spendsense_redirect") || "dashboard.html";
       sessionStorage.removeItem("spendsense_redirect");
-      setTimeout(() => window.location.href = redirect, 400);
+      setTimeout(() => window.location.href = redirect, 650);
 
     } catch (err) {
       showAlert(err.message || "Verification failed. Check your code.");

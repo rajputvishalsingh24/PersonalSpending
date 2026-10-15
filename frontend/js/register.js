@@ -335,8 +335,9 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.setItem("spendsense_token", token);
       localStorage.setItem("spendsense_token", token);
 
+      triggerConfetti();
       showToast("Registration successful! Welcome to SpendSense.", "success");
-      setTimeout(() => window.location.href = "dashboard.html", 400);
+      setTimeout(() => window.location.href = "dashboard.html", 650);
 
     } catch (err) {
       showAlert(err.message || "Verification failed. Check the code.");

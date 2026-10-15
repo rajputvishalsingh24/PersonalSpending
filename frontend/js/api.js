@@ -736,12 +736,19 @@ function formatDateIndian(dateStr) {
   }
 }
 
-// 3D Card Tilt Interaction Initializer
+// 3D Card Tilt & Interactive Glare Reflection Initializer
 function initTiltCards() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const cards = document.querySelectorAll(".tilt-card");
   cards.forEach(card => {
+    // Inject dynamic glare layer if not already present
+    if (!card.querySelector(".card-glare")) {
+      const glare = document.createElement("div");
+      glare.className = "card-glare";
+      card.appendChild(glare);
+    }
+
     card.addEventListener("mousemove", (e) => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -749,10 +756,15 @@ function initTiltCards() {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       
-      const rotateX = ((y - centerY) / centerY) * -4;
-      const rotateY = ((x - centerX) / centerX) * 4;
+      const rotateX = ((y - centerY) / centerY) * -5;
+      const rotateY = ((x - centerX) / centerX) * 5;
 
-      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+      const pctX = ((x / rect.width) * 100).toFixed(1);
+      const pctY = ((y / rect.height) * 100).toFixed(1);
+
+      card.style.setProperty('--mouse-x', `${pctX}%`);
+      card.style.setProperty('--mouse-y', `${pctY}%`);
+      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-3px)`;
     });
 
     card.addEventListener("mouseleave", () => {
@@ -760,3 +772,102 @@ function initTiltCards() {
     });
   });
 }
+
+// Animated Financial Counter (Eased Number Count-Up)
+function animateCounter(el, targetValue, duration = 900, prefix = "₹", suffix = "") {
+  if (!el) return;
+  const target = Number(targetValue) || 0;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    el.innerText = `${prefix}${target.toLocaleString("en-IN")}${suffix}`;
+    return;
+  }
+
+  const startValue = 0;
+  const startTime = performance.now();
+
+  function updateCount(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Smooth easeOutCubic curve
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const current = Math.floor(startValue + (target - startValue) * ease);
+
+    el.innerText = `${prefix}${current.toLocaleString("en-IN")}${suffix}`;
+
+    if (progress < 1) {
+      requestAnimationFrame(updateCount);
+    } else {
+      el.innerText = `${prefix}${target.toLocaleString("en-IN")}${suffix}`;
+    }
+  }
+
+  requestAnimationFrame(updateCount);
+}
+
+// Lightweight Celebratory Canvas Confetti
+function triggerConfetti() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let canvas = document.getElementById("confetti-canvas");
+  if (!canvas) {
+    canvas = document.createElement("canvas");
+    canvas.id = "confetti-canvas";
+    document.body.appendChild(canvas);
+  }
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ["#8B5CF6", "#10B981", "#F59E0B", "#F43F5E", "#3B82F6", "#EC4899", "#A855F7"];
+  const particles = [];
+  const count = 75;
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: canvas.width / 2 + (Math.random() - 0.5) * 260,
+      y: canvas.height * 0.42,
+      vx: (Math.random() - 0.5) * 14,
+      vy: Math.random() * -14 - 3,
+      size: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 12,
+      gravity: 0.42,
+      opacity: 1
+    });
+  }
+
+  const startTime = performance.now();
+  function render(time) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let active = 0;
+
+    particles.forEach(p => {
+      p.vy += p.gravity;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.rotSpeed;
+      p.opacity = Math.max(0, p.opacity - 0.016);
+
+      if (p.opacity > 0 && p.y < canvas.height) {
+        active++;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
+        ctx.restore();
+      }
+    });
+
+    if (active > 0 && performance.now() - startTime < 2500) {
+      requestAnimationFrame(render);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  requestAnimationFrame(render);
+}
+

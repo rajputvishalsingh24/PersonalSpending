@@ -163,7 +163,14 @@ body {
   .doodle-bob,
   .doodle-rotate,
   .doodle-twinkle,
-  .toast {
+  .toast,
+  .aurora-blob,
+  .gradient-text-animated,
+  .float-levitate,
+  .doodle-coin-3d,
+  .glow-pulse,
+  .progress-bar-fill::after,
+  .shimmer-sweep::after {
     animation: none !important;
     transition: none !important;
     transform: none !important;
@@ -185,3 +192,231 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
 }
+
+/* =========================================================================
+   SpendSense Premium Motion & Animation System
+   ========================================================================= */
+
+/* 1. Aurora Background Ambient Mesh Glow */
+.aurora-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.38;
+  mix-blend-mode: multiply;
+  animation: aurora-drift 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.aurora-1 {
+  width: 520px;
+  height: 520px;
+  top: -120px;
+  left: 5%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(99, 102, 241, 0.25) 55%, transparent 80%);
+  animation-duration: 20s;
+}
+
+.aurora-2 {
+  width: 480px;
+  height: 480px;
+  top: 15%;
+  right: -80px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, rgba(56, 189, 248, 0.2) 60%, transparent 80%);
+  animation-duration: 24s;
+  animation-delay: -5s;
+}
+
+.aurora-3 {
+  width: 580px;
+  height: 580px;
+  bottom: -160px;
+  left: 28%;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.3) 0%, rgba(217, 70, 239, 0.22) 55%, transparent 80%);
+  animation-duration: 22s;
+  animation-delay: -10s;
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(60px, -45px) scale(1.12) rotate(15deg);
+  }
+  66% {
+    transform: translate(-45px, 50px) scale(0.94) rotate(-12deg);
+  }
+  100% {
+    transform: translate(35px, -25px) scale(1.06) rotate(8deg);
+  }
+}
+
+/* 2. Dynamic 3D Card Glare Spotlight */
+.tilt-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle 320px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.42), transparent 75%);
+  transition: opacity 0.25s ease;
+  z-index: 5;
+  border-radius: inherit;
+}
+
+.tilt-card:hover .card-glare {
+  opacity: 1;
+}
+
+/* 3. Animated Gradient Text */
+.gradient-text-animated {
+  background: linear-gradient(135deg, #7E22CE 0%, #3B82F6 30%, #10B981 70%, #7E22CE 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 4. Shimmer Pass on Badges and Cards */
+.shimmer-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer-pass 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer-pass {
+  0% { left: -100%; }
+  40%, 100% { left: 160%; }
+}
+
+/* 5. Viewport Scroll Entrance Reveals */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-init.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.40s; }
+
+/* 6. Micro-Interactions & Levitation */
+.float-levitate {
+  animation: levitate-anim 4.2s ease-in-out infinite;
+}
+
+@keyframes levitate-anim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+.glow-pulse {
+  animation: glow-pulse-anim 3.5s ease-in-out infinite;
+}
+
+@keyframes glow-pulse-anim {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(168, 85, 247, 0.2);
+  }
+}
+
+.btn-interactive {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-interactive:active {
+  transform: scale(0.96) !important;
+}
+.btn-interactive:hover {
+  transform: translateY(-2px);
+}
+
+/* 7. Animated 3D Rupee Coin Doodle */
+@keyframes coin-3d-spin {
+  0% { transform: translateY(0px) rotateY(0deg) rotateZ(0deg); }
+  25% { transform: translateY(-8px) rotateY(35deg) rotateZ(3deg); }
+  50% { transform: translateY(-14px) rotateY(0deg) rotateZ(-2deg); }
+  75% { transform: translateY(-6px) rotateY(-35deg) rotateZ(2deg); }
+  100% { transform: translateY(0px) rotateY(0deg) rotateZ(0deg); }
+}
+
+.doodle-coin-3d {
+  animation: coin-3d-spin 5.5s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* 8. Progress Bars with Animated Shimmer Sweep */
+.progress-bar-fill {
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: translateX(-100%);
+  animation: progress-shimmer 2.4s infinite;
+}
+
+@keyframes progress-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 9. Canvas Confetti Overlay */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99999;
+}
+
