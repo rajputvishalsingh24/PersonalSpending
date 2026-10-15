@@ -114,6 +114,17 @@
               <button type="button" id="btn-reg-edit-phone" class="text-purple-700 hover:underline font-semibold">Edit</button>
             </div>
 
+            <!-- Prominent OTP Code Banner with 1-Click Auto Fill -->
+            <div id="reg-otp-hint-banner" class="p-3 bg-purple-50/90 border border-purple-200 rounded-xl flex items-center justify-between text-xs text-purple-950 shadow-sm">
+              <div class="flex items-center space-x-2">
+                <span class="text-base">🔑</span>
+                <span>Demo Code: <strong class="font-mono text-sm tracking-widest bg-white px-2 py-0.5 rounded border border-purple-200 text-purple-800 font-bold">123456</strong></span>
+              </div>
+              <button type="button" id="btn-reg-auto-fill-otp" class="font-bold text-purple-700 hover:text-purple-900 bg-white px-2.5 py-1 rounded-lg border border-purple-300 hover:bg-purple-100 transition-colors shadow-xs">
+                Auto-fill Code
+              </button>
+            </div>
+
             <div class="flex justify-between space-x-2" id="reg-otp-group">
               <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
               <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
@@ -181,55 +192,6 @@
             <span>Create Account with Email</span>
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
-        </form>
-              <div class="flex space-x-2">
-                <select id="reg-country-code" class="w-28 py-2.5 px-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white">
-                  <option value="+91">🇮🇳 +91</option>
-                  <option value="+1">🇺🇸 +1</option>
-                  <option value="+44">🇬🇧 +44</option>
-                  <option value="+971">🇦🇪 +971</option>
-                  <option value="+65">🇸🇬 +65</option>
-                  <option value="+61">🇦🇺 +61</option>
-                  <option value="+49">🇩🇪 +49</option>
-                  <option value="+33">🇫🇷 +33</option>
-                </select>
-                <input id="reg-phone-number" type="tel" required placeholder="98765 43210" class="flex-grow px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
-              </div>
-            </div>
-
-            <button id="btn-reg-send-otp" type="button" class="w-full py-3 rounded-xl font-bold text-white bg-purple-700 hover:bg-purple-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
-              <span>Send OTP Verification Code</span>
-              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </button>
-          </div>
-
-          <!-- Step 2: Verify Phone Code -->
-          <div id="reg-phone-step-2" class="space-y-4 hidden">
-            <div class="flex items-center justify-between text-xs text-slate-500">
-              <span>Enter 6-digit code sent to <b id="reg-display-phone" class="text-slate-800 font-bold"></b></span>
-              <button type="button" id="btn-reg-edit-phone" class="text-purple-700 hover:underline font-semibold">Edit</button>
-            </div>
-
-            <div class="flex justify-between space-x-2" id="reg-otp-group">
-              <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
-              <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
-              <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
-              <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
-              <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
-              <input type="text" maxlength="1" inputmode="numeric" class="reg-otp-box w-11 h-12 text-center text-xl font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all">
-            </div>
-
-            <div class="flex items-center justify-between text-xs pt-1">
-              <span id="reg-otp-timer" class="text-slate-400">Resend in <span id="reg-otp-countdown">60</span>s</span>
-              <button id="btn-reg-resend" type="button" disabled class="font-bold text-purple-700 disabled:text-slate-400 disabled:cursor-not-allowed hover:underline">
-                Resend OTP
-              </button>
-            </div>
-
-            <button id="btn-complete-phone-reg" type="submit" class="w-full py-3 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
-              <span>Complete Registration</span>
-            </button>
-          </div>
         </form>
 
         <div class="mt-6 pt-5 border-t border-slate-100 text-center">

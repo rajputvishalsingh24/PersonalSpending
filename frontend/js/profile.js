@@ -38,15 +38,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 1. Load User Profile
   async function loadProfile() {
     try {
-      const user = await authAPI.getMe();
+      let user = await authAPI.getMe();
       if (!user) return;
+      if (user && user.user) user = user.user;
 
       // Update avatar initials
-      const name = user.full_name || "SpendSense User";
+      const name = user.full_name || user.display_name || "SpendSense User";
       profileName.innerText = name;
-      if (headerUserName) headerUserName.innerText = user.display_name || name.split(" ")[0];
+      if (headerUserName) headerUserName.innerText = user.display_name || (name ? name.split(" ")[0] : "User");
 
-      const initials = name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase() || "U";
+      const initials = (name || "U").split(" ").filter(Boolean).map(n => n[0]).join("").substring(0, 2).toUpperCase() || "U";
       profileAvatar.innerText = initials;
 
       profileEmail.innerText = user.email || "No email address linked";

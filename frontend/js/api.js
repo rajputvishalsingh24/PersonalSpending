@@ -13,7 +13,11 @@ const API_BASE_URL = (() => {
 })();
 
 // Detect if running on Vercel or static hosting without a local backend running
-const IS_VERCEL_STATIC = window.location.hostname.includes("vercel.app") || window.location.hostname.includes("github.io") || window.location.protocol === "file:";
+const IS_VERCEL_STATIC = window.location.hostname.includes("vercel.app") ||
+                         window.location.hostname.includes("vercel.dev") ||
+                         window.location.hostname.includes("github.io") ||
+                         window.location.protocol === "file:" ||
+                         (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1" && !localStorage.getItem("spendsense_backend_url"));
 
 // =========================================================================
 // Client-Side Persistent Financial Engine (for Standalone Static Vercel Web)
@@ -132,31 +136,87 @@ class MockBackend {
 
     // 1. Auth endpoints
     if (endpoint === "/api/auth/me") {
-      return { user: store.user };
+      const u = store.user || {
+        id: 1,
+        full_name: "Personal User",
+        display_name: "Personal",
+        email: "demo@spendsense.local",
+        phone: "+919876543210",
+        email_verified: 1,
+        phone_verified: 1,
+        default_currency: "INR"
+      };
+      if (!u.display_name && u.full_name) u.display_name = u.full_name.split(" ")[0];
+      return u;
     }
     if (endpoint === "/api/auth/login") {
-      const user = { ...store.user, email: body.email || store.user.email, phone: body.phone || store.user.phone };
+      const user = {
+        ...store.user,
+        email: body.email || store.user.email,
+        phone: body.phone || store.user.phone
+      };
+      if (!user.display_name && user.full_name) user.display_name = user.full_name.split(" ")[0];
       store.user = user;
       MockBackend.saveStore(store);
-      localStorage.setItem("spendsense_token", "mock_session_token_12345");
-      return { message: "Login successful.", user, token: "mock_session_token_12345" };
+      const token = "mock_session_token_12345";
+      localStorage.setItem("spendsense_token", token);
+      sessionStorage.setItem("spendsense_token", token);
+      return { message: "Login successful.", user, session_token: token, token };
     }
     if (endpoint === "/api/auth/register") {
-      const newUser = { id: Date.now(), full_name: body.full_name || "New User", email: body.email || "", phone: body.phone || "", email_verified: body.email ? 0 : 1, phone_verified: body.phone ? 1 : 0, default_currency: "INR" };
+      const fullName = body.full_name || "SpendSense User";
+      const newUser = {
+        id: Date.now(),
+        full_name: fullName,
+        display_name: fullName.split(" ")[0],
+        email: body.email || "",
+        phone: body.phone || "",
+        email_verified: body.email ? 0 : 1,
+        phone_verified: body.phone ? 1 : 0,
+        default_currency: "INR"
+      };
       store.user = newUser;
       MockBackend.saveStore(store);
-      localStorage.setItem("spendsense_token", "mock_session_token_" + newUser.id);
-      return { message: "Account created successfully.", user: newUser, token: "mock_session_token_" + newUser.id };
+      const token = "mock_session_token_" + newUser.id;
+      localStorage.setItem("spendsense_token", token);
+      sessionStorage.setItem("spendsense_token", token);
+      return { message: "Account created successfully.", user: newUser, session_token: token, token };
     }
     if (endpoint === "/api/auth/otp/send") {
-      return { success: true, message: "Verification OTP code sent successfully (Dev code: 123456)." };
+      const countryCode = body.country_code || "+91";
+      const phoneNum = (body.phone || "9876543210").replace(/[\s\-\(\)]/g, "");
+      const fullPhone = `${countryCode} ${phoneNum}`;
+      return {
+        success: true,
+        phone: fullPhone,
+        otp_code: "123456",
+        message: "Verification code sent! For demo testing, your code is: 123456"
+      };
     }
     if (endpoint === "/api/auth/otp/verify") {
-      const user = { ...store.user, phone: body.phone || store.user.phone, phone_verified: 1 };
+      const countryCode = body.country_code || "+91";
+      const rawPhone = (body.phone || "").replace(/[^0-9]/g, "");
+      const normalizedPhone = countryCode + rawPhone;
+      const fullName = body.full_name || store.user.full_name || "SpendSense User";
+      const user = {
+        ...store.user,
+        phone: normalizedPhone || store.user.phone || "+919876543210",
+        phone_verified: 1,
+        full_name: fullName,
+        display_name: fullName.split(" ")[0]
+      };
       store.user = user;
       MockBackend.saveStore(store);
-      localStorage.setItem("spendsense_token", "mock_session_token_12345");
-      return { success: true, message: "Phone verified successfully.", user, token: "mock_session_token_12345" };
+      const token = "mock_session_token_12345";
+      localStorage.setItem("spendsense_token", token);
+      sessionStorage.setItem("spendsense_token", token);
+      return {
+        success: true,
+        message: "Phone verified successfully. Redirecting...",
+        user,
+        session_token: token,
+        token
+      };
     }
     if (endpoint === "/api/auth/verify-email") {
       store.user.email_verified = 1;

@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const regOtpCountdown = document.getElementById("reg-otp-countdown");
   const btnRegResend = document.getElementById("btn-reg-resend");
   const btnCompletePhoneReg = document.getElementById("btn-complete-phone-reg");
+  const btnRegAutoFillOtp = document.getElementById("btn-reg-auto-fill-otp");
 
   let countdownInterval = null;
 
@@ -290,6 +291,18 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRegSendOtp.click();
   });
 
+  // Auto-fill demo OTP
+  if (btnRegAutoFillOtp) {
+    btnRegAutoFillOtp.addEventListener("click", () => {
+      const demoCode = "123456";
+      regOtpBoxes.forEach((box, i) => {
+        box.value = demoCode[i] || "";
+      });
+      if (regOtpBoxes.length > 0) regOtpBoxes[regOtpBoxes.length - 1].focus();
+      showToast("Demo verification code 123456 filled!", "info");
+    });
+  }
+
   // 6. Complete Phone Registration Submission
   formPhone.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -318,12 +331,12 @@ document.addEventListener("DOMContentLoaded", () => {
         purpose: "register"
       });
 
-      if (res.session_token) {
-        sessionStorage.setItem("spendsense_token", res.session_token);
-      }
+      const token = res.session_token || res.token || "mock_session_token_12345";
+      sessionStorage.setItem("spendsense_token", token);
+      localStorage.setItem("spendsense_token", token);
 
       showToast("Registration successful! Welcome to SpendSense.", "success");
-      setTimeout(() => window.location.href = "dashboard.html", 600);
+      setTimeout(() => window.location.href = "dashboard.html", 400);
 
     } catch (err) {
       showAlert(err.message || "Verification failed. Check the code.");

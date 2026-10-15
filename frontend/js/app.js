@@ -157,20 +157,24 @@ async function checkGlobalAuth(currentPath) {
   const isPublicPage = publicPages.includes(currentPath);
 
   try {
-    const user = await authAPI.getMe();
+    let user = await authAPI.getMe();
+    if (user && user.user) user = user.user;
     currentAuthenticatedUser = user;
+
+    const fullName = user?.full_name || user?.display_name || "SpendSense User";
+    const displayName = user?.display_name || (fullName ? fullName.split(" ")[0] : "User");
 
     // If on landing page (index.html), customize nav buttons & hero CTAs
     if (currentPath === "index.html" || currentPath === "") {
       const authNavContainer = document.getElementById("landing-auth-nav");
       if (authNavContainer) {
-        const initial = (user.full_name || "U")[0].toUpperCase();
+        const initial = (fullName || "U")[0].toUpperCase();
         authNavContainer.innerHTML = `
           <a href="dashboard.html" class="px-4 py-2 text-sm font-semibold rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all border border-slate-200 flex items-center space-x-2">
             <span>Dashboard</span>
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
           </a>
-          <a href="profile.html" class="w-9 h-9 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center text-sm shadow hover:scale-105 transition-transform" title="${user.full_name}">
+          <a href="profile.html" class="w-9 h-9 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center text-sm shadow hover:scale-105 transition-transform" title="${fullName}">
             ${initial}
           </a>
         `;
@@ -191,7 +195,7 @@ async function checkGlobalAuth(currentPath) {
     // Populate user info in header on protected pages
     const headerUserName = document.getElementById("header-user-name");
     if (headerUserName && user) {
-      headerUserName.innerText = user.display_name || user.full_name.split(" ")[0];
+      headerUserName.innerText = displayName;
     }
 
     // Insert user dropdown menu into header if placeholder exists
@@ -215,12 +219,16 @@ function renderHeaderUserDropdown(user) {
   const target = document.getElementById("header-user-menu-container");
   if (!target || !user) return;
 
-  const initials = (user.full_name || "U")
+  const fullName = user.full_name || user.display_name || "SpendSense User";
+  const displayName = user.display_name || (fullName ? fullName.split(" ")[0] : "User");
+
+  const initials = (fullName || "U")
     .split(" ")
+    .filter(Boolean)
     .map(p => p[0])
     .join("")
     .substring(0, 2)
-    .toUpperCase();
+    .toUpperCase() || "U";
 
   target.innerHTML = `
     <div class="relative inline-block text-left" id="user-dropdown-wrapper">
@@ -228,7 +236,7 @@ function renderHeaderUserDropdown(user) {
         <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-700 to-indigo-600 text-white text-xs font-bold flex items-center justify-center shadow-sm">
           ${initials}
         </div>
-        <span class="hidden sm:inline text-xs font-bold text-slate-700">${user.display_name || user.full_name.split(" ")[0]}</span>
+        <span class="hidden sm:inline text-xs font-bold text-slate-700">${displayName}</span>
         <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
       </button>
 

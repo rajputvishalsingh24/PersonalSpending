@@ -30,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnResendOtp = document.getElementById("btn-resend-otp");
   const otpBoxes = document.querySelectorAll(".otp-box");
   const btnVerifyOtp = document.getElementById("btn-verify-otp");
+  const btnAutoFillOtp = document.getElementById("btn-auto-fill-otp");
+  const btnQuickFillPhone = document.getElementById("btn-quick-fill-phone");
 
   const btnFillDemo = document.getElementById("btn-fill-demo");
 
@@ -231,6 +233,27 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSendOtp.click();
   });
 
+  // Auto-fill demo OTP code
+  if (btnAutoFillOtp) {
+    btnAutoFillOtp.addEventListener("click", () => {
+      const demoCode = "123456";
+      otpBoxes.forEach((box, i) => {
+        box.value = demoCode[i] || "";
+      });
+      if (otpBoxes.length > 0) otpBoxes[otpBoxes.length - 1].focus();
+      showToast("Demo verification code 123456 filled!", "info");
+    });
+  }
+
+  // Quick-fill demo mobile number
+  if (btnQuickFillPhone) {
+    btnQuickFillPhone.addEventListener("click", () => {
+      phoneInput.value = "9876543210";
+      phoneInput.focus();
+      showToast("Demo mobile number filled!", "info");
+    });
+  }
+
   // 6. Phone OTP Step 2: Verify & Log In
   formPhone.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -258,29 +281,33 @@ document.addEventListener("DOMContentLoaded", () => {
         purpose: "login"
       });
 
-      if (res.session_token) {
-        sessionStorage.setItem("spendsense_token", res.session_token);
-      }
+      const token = res.session_token || res.token || "mock_session_token_12345";
+      sessionStorage.setItem("spendsense_token", token);
+      localStorage.setItem("spendsense_token", token);
 
-      showToast(res.message, "success");
+      showToast(res.message || "Phone verified successfully!", "success");
       const redirect = sessionStorage.getItem("spendsense_redirect") || "dashboard.html";
       sessionStorage.removeItem("spendsense_redirect");
-      setTimeout(() => window.location.href = redirect, 500);
+      setTimeout(() => window.location.href = redirect, 400);
 
     } catch (err) {
       showAlert(err.message || "Verification failed. Check your code.");
       btnVerifyOtp.disabled = false;
-      btnVerifyOtp.innerHTML = `<span>Verify & Continue</span>`;
+      btnVerifyOtp.innerHTML = `<span>Sign In with OTP</span>`;
     }
   });
 
   // 7. Quick Demo Account auto-fill
   if (btnFillDemo) {
     btnFillDemo.addEventListener("click", () => {
-      tabEmail.click();
-      emailInput.value = "demo@spendsense.local";
-      passwordInput.value = "demo123";
-      showAlert("ℹ️ Click 'Log In' to access the pre-seeded demo environment.", "info");
+      if (!formPhone.classList.contains("hidden")) {
+        phoneInput.value = "9876543210";
+        showAlert("ℹ️ Demo mobile number filled! Click 'Send Verification Code' to receive OTP 123456.", "info");
+      } else {
+        emailInput.value = "demo@spendsense.local";
+        passwordInput.value = "demo123";
+        showAlert("ℹ️ Click 'Log In with Password' to access the pre-seeded demo environment.", "info");
+      }
     });
   }
 });

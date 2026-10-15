@@ -253,19 +253,20 @@ def init_db() -> None:
         if not row:
             cursor.execute("""
                 INSERT INTO users (
-                    id, full_name, display_name, email, password_hash, default_currency, email_verified, created_at, updated_at
-                ) VALUES (1, 'Personal User', 'Personal User', 'demo@spendsense.local', ?, 'INR', 1, ?, ?);
+                    id, full_name, display_name, email, phone, phone_verified, password_hash, default_currency, email_verified, created_at, updated_at
+                ) VALUES (1, 'Personal User', 'Personal User', 'demo@spendsense.local', '+919876543210', 1, ?, 'INR', 1, ?, ?);
             """, (demo_hash, now_iso, now_iso))
         else:
-            if not row[1] or not row[2]:
-                cursor.execute("""
-                    UPDATE users SET email = COALESCE(email, 'demo@spendsense.local'),
-                                     password_hash = COALESCE(password_hash, ?),
-                                     full_name = COALESCE(full_name, 'Personal User'),
-                                     display_name = COALESCE(display_name, 'Personal User'),
-                                     email_verified = 1
-                    WHERE id = 1;
-                """, (demo_hash,))
+            cursor.execute("""
+                UPDATE users SET email = COALESCE(email, 'demo@spendsense.local'),
+                                 phone = COALESCE(phone, '+919876543210'),
+                                 phone_verified = 1,
+                                 password_hash = COALESCE(password_hash, ?),
+                                 full_name = COALESCE(full_name, 'Personal User'),
+                                 display_name = COALESCE(display_name, 'Personal User'),
+                                 email_verified = 1
+                WHERE id = 1;
+            """, (demo_hash,))
 
         # Backfill user_id = 1 on any existing records where user_id is NULL
         for tbl in ["uploads", "categories", "category_mappings", "transactions", "budgets", "recurring_transactions", "insights"]:
